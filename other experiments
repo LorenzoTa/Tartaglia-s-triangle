@@ -1,0 +1,6 @@
+in the 'colorize by evaluation' you can also load external modules:
+
+use Math::Prime::Util::GMP qw/sigma/; will load this wonderful module, so after you can:
+
+sigma($_)>2*$_  
+which shows the distribution of abundants number in the triangle: which seems interesting
