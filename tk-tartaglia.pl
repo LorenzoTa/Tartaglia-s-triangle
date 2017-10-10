@@ -483,25 +483,54 @@ sub tar_print{
     1;  # or col_eval will not call colorizes
 }
 ################################################################################
-sub check_prime { #http://www.perlmonks.org/?node_id=1054405
-  my ($i,$j,$h,$sentinel) = (shift,0,0,0);
-  # if $i is an even number, it can't be a prime
-  if($i%2==0){return 0}
-  else{
-    $h=POSIX::floor(sqrt($i));
-    $sentinel=0;
-      # since $i can't be even -> only divide by odd numbers
-      for($j=3; $j<=$h; $j+=2){
-          if($i%$j==0){
-               $sentinel++;
-               # $i is not a prime, we can get out of the loop
-              $j=$h;
-          }
-      }
-    if($sentinel==0){
-        return 1; print "$i \n";
-    }
+#sub check_prime { #http://www.perlmonks.org/?node_id=1054405
+#  my ($i,$j,$h,$sentinel) = (shift,0,0,0);
+#  # if $i is an even number, it can't be a prime
+#  if($i%2==0){return 0}
+#  else{
+#    $h=POSIX::floor(sqrt($i));
+#    $sentinel=0;
+#      # since $i can't be even -> only divide by odd numbers
+#      for($j=3; $j<=$h; $j+=2){
+#          if($i%$j==0){
+#               $sentinel++;
+#               # $i is not a prime, we can get out of the loop
+#              $j=$h;
+#          }
+#      }
+#    if($sentinel==0){
+#        return 1; print "$i \n";
+#    }
+#  }
+#}
+#
+# new check_prime gently provided by danaj as found in perlmonks. ~78% faster
+#
+sub check_prime{
+  my($n) = @_;
+  return 1 if ($n == 2) || ($n == 3) || ($n == 5);  # 2, 3, 5 are prime
+  return 0 if $n < 7;  # everything else below 7 is composite
+  # multiples of 2,3,5 are composite
+  return 0 if (($n % 2) == 0) || (($n % 3) == 0) || (($n % 5) == 0);
+
+  foreach my $i (qw/7 11 13 17 19 23 29 31 37 41 43 47 53 59/) {
+    return 1 if $i*$i > $n;
+    return 0 if ($n % $i) == 0;
   }
+  my $limit = int(sqrt($n));
+
+  my $i = 61;  # mod-30 loop
+  while (1) {
+    return 0 if ($n % $i) == 0;  $i += 6;  last if $i > $limit;
+    return 0 if ($n % $i) == 0;  $i += 4;  last if $i > $limit;
+    return 0 if ($n % $i) == 0;  $i += 2;  last if $i > $limit;
+    return 0 if ($n % $i) == 0;  $i += 4;  last if $i > $limit;
+    return 0 if ($n % $i) == 0;  $i += 2;  last if $i > $limit;
+    return 0 if ($n % $i) == 0;  $i += 4;  last if $i > $limit;
+    return 0 if ($n % $i) == 0;  $i += 6;  last if $i > $limit;
+    return 0 if ($n % $i) == 0;  $i += 2;  last if $i > $limit;
+  }
+  1;
 }
 ################################################################################
 sub decolorize {
