@@ -1088,7 +1088,7 @@ In Italy, the arithmetic triangle is called Tartglia's triangle, because exposed
 
 In 1512 when the French invaded Brescia, a French soldier sliced Niccolò's jaw and palate with a saber. This made it impossible for Niccolò to speak normally, prompting the nickname "Tartaglia" ("stammerer"), which he adopted.
 
-Known as Pascal's triangle (but Pascal drow it as right triangle) in many other countries was known by Halayuda, an Indian commentator, in 10th century, sudied around 1100 by Omar Khayyam, a Persian mathematician, known in China as early as 1261 and so studied in India, Greece, Iran, China, Germany and Italy before Pascal.
+Known as Pascal's triangle (but Pascal drawn it as right triangle) in many other countries was known by Halayuda, an Indian commentator, in 10th century, studied around 1100 by Omar Khayyam, a Persian mathematician, known in China as early as 1261 and so studied in India, Greece, Iran, China, Germany and Italy before Pascal.
 
 About the program: keep it mind i'm not a mathematician, i was only impressed by the huge amount of things you can see in the triangle and i want to show them.
 
