@@ -2,18 +2,19 @@
 use strict;
 use warnings;
 use Math::BigInt;
+use Time::HiRes qw ( sleep );
 use POSIX;
 use Tk;
 use Tk::Pane;
 ################################################################################
 #   SOME GLOBAL DECLARATION
 ################################################################################
-my @tartaglia ;     #AoA used as CACHE
-my @tkcache;        #AoA used as CACHE for Tk buttons in the triangles
+my @tartaglia ;     # AoA used as CACHE
+my @tkcache;        # AoA used as CACHE for Tk buttons in the triangles
 my $tart_win;       # triangle window
-my $ow;             #output window
-my $out;            #output var for out_win
-my $row_num = 15;   #default row noumber for the triangle
+my $ow;             # output window
+my $out;            # output var for out_win
+my $row_num = 15;   # default row number for the triangle
 my $dot_after = 2;  # default: instead of '24' it prints '..'
 my $debug = 0;      # no debug infos in the output window
 my @posible_colors = qw(red royalblue  orange green yellow violet blue pink purple );
@@ -181,6 +182,14 @@ my $input_ssq;
 my $color_ssq = 'red';
 my $title_ssq = "Sum of squares in the row";
 create_experiment (\$input_ssq, \$color_ssq, $title_ssq, \&help_squa, \sub {&sum_squares($input_ssq, $color_ssq)});
+
+#### PATHS
+my $input_goal;
+my $color_goal = 'red';
+my $title_goal = "Paths to a tile";
+create_experiment (\$input_goal, \$color_goal, $title_goal,\&help_paths, \sub {&distinct_paths($input_goal, $color_goal)});
+
+
 
 tar_print "Welcome to Tartaglia's triangle fun offered by Discipulus as found at www.perlmonks.org";
 &draw_triangle;
@@ -463,11 +472,30 @@ sub col_eval {
     }
 }
 ################################################################################
+sub distinct_paths {
+    my $goal = shift;
+	my $color = shift;
+	my ($goal_x, $goal_y) = split /\s+/, $goal;
+	if ($goal_y > $goal_x){
+		tar_print  "The tile at coordinates $goal_x - $goal_y is outside the triangle\n";
+		return;
+	}
+	colorize ($tkcache[$goal_x][$goal_y], $color);
+	
+	tar_print "The tile at coordinates $goal_x - $goal_y has the value of ", 
+				(tartaglia_row($goal_x))[$goal_y] ,"\n".
+				"as the number of valid paths:\n";
+	paths_colorizer ($color,[($goal_x,$goal_y)]);
+	&colorize ($tkcache[$goal_x][$goal_y], $color);
+	
+}
+
+################################################################################
 #   UTILITY SUBROUTINES
 ################################################################################
 sub create_experiment{
     my ($input, $color, $title, $help, $sub_ref) = @_;
-    my $frame = $scrolled_top->Frame(-borderwidth => 2, -relief => 'groove')->pack(-side=>'top',-anchor=>'w',-pady=>5);
+	my $frame = $scrolled_top->Frame(-borderwidth => 2, -relief => 'groove')->pack(-side=>'top',-anchor=>'w',-pady=>5);
     $frame->Button(-text => "?",-borderwidth => 2, -command => sub {&help($help)} )->pack(-side => 'left',-expand => 1);
     $frame->Label(-text => (pack 'A25', $title) )->pack(-side => 'left',-expand => 1);
     $frame->Entry(-width => 25,-borderwidth => 4,-textvariable => $input)->pack(-side => 'left',-expand => 1);
@@ -475,7 +503,32 @@ sub create_experiment{
     $frame->Button(-text => "Colorize",-borderwidth => 4, -command => $sub_ref)->pack(-side => 'left',-expand => 1);
     $frame->Button(-text => "Clear",-borderwidth => 4, -command => \&decolorize)->pack(-side => 'left',-expand => 1);
 }
-################################################################################
+##################################################################################
+sub paths_colorizer{
+	# this sub will compute all shortest paths possible
+	# and also colorize them
+	# see http://www.perlmonks.org/?node_id=1211704
+	my $color = shift;
+	my ($row, $col) = ($_[0][0],$_[0][1]);
+	if ($row == 0 and $col == 0){
+		tar_print +(join ' ', map{join '-',@$_ }@_),"\n";
+		map{
+			colorize($tkcache[$$_[0]][$$_[1]],  $color);
+		}@_;
+		# if more than 10 paths sleeps less
+		if ((tartaglia_row($_[-1][0]))[$_[-1][1]] > 10){
+			# paths are shown in ~10 seconds
+			sleep (10 / (tartaglia_row($_[-1][0]))[$_[-1][1]]);
+		}
+		else {sleep 1}
+		decolorize();		
+	}
+	else{
+			paths_colorizer(  $color,[~-$row, ~-$col],map {[@$_]}@_ ) if $row * $col > 0;
+			paths_colorizer(  $color,[~-$row, $col], map {[@$_]}@_ )if $row > $col;
+	}	
+}
+##################################################################################
 sub tar_print{
     &check_output();
     $out->insert('end', "@_");
@@ -629,7 +682,7 @@ sub draw_triangle {
 ################################################################################
 #{
 # my @tartaglia ; #AoA used as CACHE
-  sub tartaglia {
+sub tartaglia {
       my ($x,$y) = @_; #tar_print "\t\treceiving ".($y)." $x\t";
       if ($x == 0 or $y == 0)  { $tartaglia[$x][$y]=1 ; tar_print "\tFORCED: 1\n" if $debug;return 1};
       tar_print ""."\tCACHE: ",(defined $tartaglia[$x][$y] ? "$tartaglia[$x][$y]" : ' -not present- '),"\n" if $debug;
@@ -640,7 +693,7 @@ sub draw_triangle {
       }
       $tartaglia[$x][$y] = $ret;
       return $ret;
-  }
+}
 #}
 ################################################################################
 sub tartaglia_row {
@@ -1010,7 +1063,8 @@ USAGE: feed cordinates of a tile not in the border of the triangle and seven til
 On the screen will appear three different properties of such pattern as calculation: the two terns share the Greatest Common Divisor and the result of the product of their three terms. Also the product of all six surrounding terms is always an integer perfect square. The last one is obvious: as the product of two terns are equal their product will be a square.
 
 EOH
-}################################################################################
+}
+################################################################################
 sub help_pow2  {
     return <<EOH
 * Powers of 2 *
@@ -1152,6 +1206,17 @@ http://www.cut-the-knot.org/arithmetic/combinatorics/PascalTriangleProperties.sh
 http://ptri1.tripod.com/
 http://www.mathsisfun.com/pascals-triangle.html
 http://mathworld.wolfram.com/PascalsTriangle.html
+
+EOH
+}
+################################################################################
+sub help_paths  {
+    return <<EOH
+* Distinct paths  *
+
+USAGE: feed cordinates of a tile....
+
+TODO
 
 EOH
 }
