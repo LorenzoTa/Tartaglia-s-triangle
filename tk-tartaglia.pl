@@ -917,7 +917,7 @@ sub help_para  {
     return <<EOH
 * Parallelogram pattern *
 
-USAGE: give the coordinates of tile and will be demondstrated that this number is equal to the summation of all numbers in the parallelogram excluded by the two diagonals crossing at the given tile position.
+USAGE: give the coordinates of tile and will be demondstrated that this number is equal to the summation of all numbers in the parallelogram excluded by the two diagonals crossing at the given tile position, minus one.
 
 
 EOH
