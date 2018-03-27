@@ -17,7 +17,7 @@ my $out;            # output var for out_win
 my $row_num = 15;   # default row number for the triangle
 my $dot_after = 2;  # default: instead of '24' it prints '..'
 my $debug = 0;      # no debug infos in the output window
-my @posible_colors = qw(red royalblue  orange green yellow violet blue pink purple );
+my @possible_colors = qw(red royalblue  orange green yellow violet blue pink purple );
 my %next_col = (red=>'royalblue',royalblue=>'orange',orange=>'green',green=>'yellow',yellow=>'violet',
                 violet=>'blue',blue=>'pink',pink=>'purple',purple=>'red');
 my @colorized;      # array of Tk button yet colorized
@@ -391,13 +391,13 @@ sub fibonacci{
               my $cur_row = $row;
               while ($cur_row >= $cur_pos){
                     next unless $tkcache[$cur_row][$cur_pos]->isa('Tk::Button');
-                    colorize($tkcache[$cur_row][$cur_pos], $posible_colors[$col_i]);
+                    colorize($tkcache[$cur_row][$cur_pos], $possible_colors[$col_i]);
                     push @{$fibonacci[$row]}, $aoa_vals[$cur_row][$cur_pos];# tar_print "push \$fibonacci[$row], $aoa_vals[$cur_row][$cur_pos];\n";
                     $cur_row--;
                     $cur_pos++;
               }
       $col_i++;
-      $col_i > $#posible_colors ? $col_i=0 : 0;
+      $col_i > $#possible_colors ? $col_i=0 : 0;
       }
       map {  my $sum = join '+',@{$_};tar_print $sum,' = ', eval $sum,"\n";$fibonacci.=(eval $sum).' ';} @fibonacci;
       tar_print "\n\nFibonacci's numbers: $fibonacci\n\n";
@@ -503,7 +503,7 @@ sub create_experiment{
     $frame->Button(-text => "?",-borderwidth => 2, -command => sub {&help($help)} )->pack(-side => 'left',-expand => 1);
     $frame->Label(-text => (pack 'A25', $title) )->pack(-side => 'left',-expand => 1);
     $frame->Entry(-width => 25,-borderwidth => 4,-textvariable => $input)->pack(-side => 'left',-expand => 1);
-    $frame->Optionmenu(-options => [@posible_colors],-variable => $color)->pack(-side => 'left',-expand => 1);
+    $frame->Optionmenu(-options => [@possible_colors],-variable => $color)->pack(-side => 'left',-expand => 1);
     $frame->Button(-text => "Colorize",-borderwidth => 4, -command => $sub_ref)->pack(-side => 'left',-expand => 1);
     $frame->Button(-text => "Clear",-borderwidth => 4, -command => \&decolorize)->pack(-side => 'left',-expand => 1);
 }
