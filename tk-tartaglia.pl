@@ -480,6 +480,10 @@ sub distinct_paths {
 		tar_print  "The tile at coordinates $goal_x - $goal_y is outside the triangle\n";
 		return;
 	}
+	if ($goal_x > $row_num){
+		tar_print  "Row  $goal_x is outside the triangle\n";
+		return;
+	}
 	colorize ($tkcache[$goal_x][$goal_y], $color);
 	
 	tar_print "The tile at coordinates $goal_x - $goal_y has the value of ", 
@@ -762,6 +766,23 @@ sub help {
 }
 ################################################################################
 #     HELP TEXTS SUBROUTINES
+################################################################################
+sub help_paths  {
+# demostrantion gently provided by hdb as found in perlmonks.org
+# see http://www.perlmonks.org/?node_id=1211524
+    return <<EOH
+* Distinct paths  *
+
+USAGE: feed cordinates of a tile. The tile will be colorized and then every shortest path from the top (0-0 tile) will be computed and colorized.
+
+Infact the number inside a tile is also the number of shortest path to reach it, starting from the top.
+
+In any path to a tile n-k, you have (n-k) (n minus k) moves left, and k moves right. Only the order of these moves determine the specific path. 
+The number of possible permutations of (n-k) and k identical elements each is n! / k! / (n-k)! which is the number in the tile.
+
+
+EOH
+}
 ################################################################################
 sub help_eval  {
     return <<'EOH'
@@ -1206,17 +1227,6 @@ http://www.cut-the-knot.org/arithmetic/combinatorics/PascalTriangleProperties.sh
 http://ptri1.tripod.com/
 http://www.mathsisfun.com/pascals-triangle.html
 http://mathworld.wolfram.com/PascalsTriangle.html
-
-EOH
-}
-################################################################################
-sub help_paths  {
-    return <<EOH
-* Distinct paths  *
-
-USAGE: feed cordinates of a tile....
-
-TODO
 
 EOH
 }
