@@ -2,21 +2,22 @@
 use strict;
 use warnings;
 use Math::BigInt;
+use Time::HiRes qw ( sleep );
 use POSIX;
 use Tk;
 use Tk::Pane;
 ################################################################################
 #   SOME GLOBAL DECLARATION
 ################################################################################
-my @tartaglia ;     #AoA used as CACHE
-my @tkcache;        #AoA used as CACHE for Tk buttons in the triangles
+my @tartaglia ;     # AoA used as CACHE
+my @tkcache;        # AoA used as CACHE for Tk buttons in the triangles
 my $tart_win;       # triangle window
-my $ow;             #output window
-my $out;            #output var for out_win
-my $row_num = 15;   #default row noumber for the triangle
+my $ow;             # output window
+my $out;            # output var for out_win
+my $row_num = 15;   # default row number for the triangle
 my $dot_after = 2;  # default: instead of '24' it prints '..'
 my $debug = 0;      # no debug infos in the output window
-my @posible_colors = qw(red royalblue  orange green yellow violet blue pink purple );
+my @possible_colors = qw(red royalblue  orange green yellow violet blue pink purple );
 my %next_col = (red=>'royalblue',royalblue=>'orange',orange=>'green',green=>'yellow',yellow=>'violet',
                 violet=>'blue',blue=>'pink',pink=>'purple',purple=>'red');
 my @colorized;      # array of Tk button yet colorized
@@ -181,6 +182,14 @@ my $input_ssq;
 my $color_ssq = 'red';
 my $title_ssq = "Sum of squares in the row";
 create_experiment (\$input_ssq, \$color_ssq, $title_ssq, \&help_squa, \sub {&sum_squares($input_ssq, $color_ssq)});
+
+#### PATHS
+my $input_goal;
+my $color_goal = 'red';
+my $title_goal = "Paths to a tile";
+create_experiment (\$input_goal, \$color_goal, $title_goal,\&help_paths, \sub {&distinct_paths($input_goal, $color_goal)});
+
+
 
 tar_print "Welcome to Tartaglia's triangle fun offered by Discipulus as found at www.perlmonks.org";
 &draw_triangle;
@@ -382,13 +391,13 @@ sub fibonacci{
               my $cur_row = $row;
               while ($cur_row >= $cur_pos){
                     next unless $tkcache[$cur_row][$cur_pos]->isa('Tk::Button');
-                    colorize($tkcache[$cur_row][$cur_pos], $posible_colors[$col_i]);
+                    colorize($tkcache[$cur_row][$cur_pos], $possible_colors[$col_i]);
                     push @{$fibonacci[$row]}, $aoa_vals[$cur_row][$cur_pos];# tar_print "push \$fibonacci[$row], $aoa_vals[$cur_row][$cur_pos];\n";
                     $cur_row--;
                     $cur_pos++;
               }
       $col_i++;
-      $col_i > $#posible_colors ? $col_i=0 : 0;
+      $col_i > $#possible_colors ? $col_i=0 : 0;
       }
       map {  my $sum = join '+',@{$_};tar_print $sum,' = ', eval $sum,"\n";$fibonacci.=(eval $sum).' ';} @fibonacci;
       tar_print "\n\nFibonacci's numbers: $fibonacci\n\n";
@@ -463,19 +472,67 @@ sub col_eval {
     }
 }
 ################################################################################
+sub distinct_paths {
+    my $goal = shift;
+	my $color = shift;
+	my ($goal_x, $goal_y) = split /\s+/, $goal;
+	if ($goal_y > $goal_x){
+		tar_print  "The tile at coordinates $goal_x - $goal_y is outside the triangle\n";
+		return;
+	}
+	if ($goal_x > $row_num){
+		tar_print  "Row  $goal_x is outside the triangle\n";
+		return;
+	}
+	colorize ($tkcache[$goal_x][$goal_y], $color);
+	
+	tar_print "The tile at coordinates $goal_x - $goal_y has the value of ", 
+				(tartaglia_row($goal_x))[$goal_y] ,"\n".
+				"as the number of valid paths:\n";
+	paths_colorizer ($color,[($goal_x,$goal_y)]);
+	&colorize ($tkcache[$goal_x][$goal_y], $color);
+	
+}
+
+################################################################################
 #   UTILITY SUBROUTINES
 ################################################################################
 sub create_experiment{
     my ($input, $color, $title, $help, $sub_ref) = @_;
-    my $frame = $scrolled_top->Frame(-borderwidth => 2, -relief => 'groove')->pack(-side=>'top',-anchor=>'w',-pady=>5);
+	my $frame = $scrolled_top->Frame(-borderwidth => 2, -relief => 'groove')->pack(-side=>'top',-anchor=>'w',-pady=>5);
     $frame->Button(-text => "?",-borderwidth => 2, -command => sub {&help($help)} )->pack(-side => 'left',-expand => 1);
     $frame->Label(-text => (pack 'A25', $title) )->pack(-side => 'left',-expand => 1);
     $frame->Entry(-width => 25,-borderwidth => 4,-textvariable => $input)->pack(-side => 'left',-expand => 1);
-    $frame->Optionmenu(-options => [@posible_colors],-variable => $color)->pack(-side => 'left',-expand => 1);
+    $frame->Optionmenu(-options => [@possible_colors],-variable => $color)->pack(-side => 'left',-expand => 1);
     $frame->Button(-text => "Colorize",-borderwidth => 4, -command => $sub_ref)->pack(-side => 'left',-expand => 1);
     $frame->Button(-text => "Clear",-borderwidth => 4, -command => \&decolorize)->pack(-side => 'left',-expand => 1);
 }
-################################################################################
+##################################################################################
+sub paths_colorizer{
+	# this sub will compute all shortest paths possible
+	# and also colorize them
+	# see http://www.perlmonks.org/?node_id=1211704
+	my $color = shift;
+	my ($row, $col) = ($_[0][0],$_[0][1]);
+	if ($row == 0 and $col == 0){
+		tar_print +(join ' ', map{join '-',@$_ }@_),"\n";
+		map{
+			colorize($tkcache[$$_[0]][$$_[1]],  $color);
+		}@_;
+		# if more than 10 paths sleeps less
+		if ((tartaglia_row($_[-1][0]))[$_[-1][1]] > 10){
+			# paths are shown in ~10 seconds
+			sleep (10 / (tartaglia_row($_[-1][0]))[$_[-1][1]]);
+		}
+		else {sleep 1}
+		decolorize();		
+	}
+	else{
+			paths_colorizer(  $color,[~-$row, ~-$col],map {[@$_]}@_ ) if $row * $col > 0;
+			paths_colorizer(  $color,[~-$row, $col], map {[@$_]}@_ )if $row > $col;
+	}	
+}
+##################################################################################
 sub tar_print{
     &check_output();
     $out->insert('end', "@_");
@@ -629,7 +686,7 @@ sub draw_triangle {
 ################################################################################
 #{
 # my @tartaglia ; #AoA used as CACHE
-  sub tartaglia {
+sub tartaglia {
       my ($x,$y) = @_; #tar_print "\t\treceiving ".($y)." $x\t";
       if ($x == 0 or $y == 0)  { $tartaglia[$x][$y]=1 ; tar_print "\tFORCED: 1\n" if $debug;return 1};
       tar_print ""."\tCACHE: ",(defined $tartaglia[$x][$y] ? "$tartaglia[$x][$y]" : ' -not present- '),"\n" if $debug;
@@ -640,7 +697,7 @@ sub draw_triangle {
       }
       $tartaglia[$x][$y] = $ret;
       return $ret;
-  }
+}
 #}
 ################################################################################
 sub tartaglia_row {
@@ -709,6 +766,23 @@ sub help {
 }
 ################################################################################
 #     HELP TEXTS SUBROUTINES
+################################################################################
+sub help_paths  {
+# demostrantion gently provided by hdb as found in perlmonks.org
+# see http://www.perlmonks.org/?node_id=1211524
+    return <<EOH
+* Distinct paths  *
+
+USAGE: feed cordinates of a tile. The tile will be colorized and then every shortest path from the top (0-0 tile) will be computed and colorized.
+
+Infact the number inside a tile is also the number of shortest path to reach it, starting from the top.
+
+In any path to a tile n-k, you have (n-k) (n minus k) moves left, and k moves right. Only the order of these moves determine the specific path. 
+The number of possible permutations of (n-k) and k identical elements each is n! / k! / (n-k)! which is the number in the tile.
+
+
+EOH
+}
 ################################################################################
 sub help_eval  {
     return <<'EOH'
@@ -843,7 +917,7 @@ sub help_para  {
     return <<EOH
 * Parallelogram pattern *
 
-USAGE: give the coordinates of tile and will be demondstrated that this number is equal to the summation of all numbers in the parallelogram excluded by the two diagonals crossing at the given tile position.
+USAGE: give the coordinates of tile and will be demondstrated that this number is equal to the summation of all numbers in the parallelogram excluded by the two diagonals crossing at the given tile position, minus one.
 
 
 EOH
@@ -1010,7 +1084,8 @@ USAGE: feed cordinates of a tile not in the border of the triangle and seven til
 On the screen will appear three different properties of such pattern as calculation: the two terns share the Greatest Common Divisor and the result of the product of their three terms. Also the product of all six surrounding terms is always an integer perfect square. The last one is obvious: as the product of two terns are equal their product will be a square.
 
 EOH
-}################################################################################
+}
+################################################################################
 sub help_pow2  {
     return <<EOH
 * Powers of 2 *
@@ -1134,7 +1209,6 @@ The experiments looks very similar:
 
 -The triangle is symmetrical.
 -Some of the numbers in Tartaglia's triangle correlate to numbers in Lozanic''s triangle
--Imagine each number in the triangle is a node in a grid which is connected to the adjacent numbers above and below it. Now for any node in the grid, count the number of paths there are in the grid (without backtracking) which connect this node to the top node (1) of the triangle. The answer is the number associated to that node.
 -The only number that appears once is 2.
 -All entries in row n are odd if and only if the binary representation of n consists of 1s.
 -If p is a prime, then every internal entry in row p ^ n (with n as any positive integer) is divisible by p.
