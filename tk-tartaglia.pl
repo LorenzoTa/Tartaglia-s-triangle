@@ -1209,7 +1209,6 @@ The experiments looks very similar:
 
 -The triangle is symmetrical.
 -Some of the numbers in Tartaglia's triangle correlate to numbers in Lozanic''s triangle
--Imagine each number in the triangle is a node in a grid which is connected to the adjacent numbers above and below it. Now for any node in the grid, count the number of paths there are in the grid (without backtracking) which connect this node to the top node (1) of the triangle. The answer is the number associated to that node.
 -The only number that appears once is 2.
 -All entries in row n are odd if and only if the binary representation of n consists of 1s.
 -If p is a prime, then every internal entry in row p ^ n (with n as any positive integer) is divisible by p.
