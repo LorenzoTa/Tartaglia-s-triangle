@@ -65,9 +65,9 @@ This software is written in Perl and would not be possible without the aid of th
 
 If you want learn even more properties of the Tartaglia's triangle (seems impossible but there are more) consider worth a visit to:
 
-http://mathforum.org/mathimages/index.php/Pascal%27s_triangle
-http://www.cut-the-knot.org/arithmetic/combinatorics/PascalTriangleProperties.shtml
-http://ptri1.tripod.com/
-http://www.mathsisfun.com/pascals-triangle.html
-http://mathworld.wolfram.com/PascalsTriangle.html
+* http://mathforum.org/mathimages/index.php/Pascal%27s_triangle
+* http://www.cut-the-knot.org/arithmetic/combinatorics/PascalTriangleProperties.shtml
+* http://ptri1.tripod.com/
+* http://www.mathsisfun.com/pascals-triangle.html
+* http://mathworld.wolfram.com/PascalsTriangle.html
 
