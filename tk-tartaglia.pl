@@ -9,19 +9,22 @@ use Tk::Pane;
 ################################################################################
 #   SOME GLOBAL DECLARATION
 ################################################################################
-my @tartaglia ;     # AoA used as CACHE
-my @tkcache;        # AoA used as CACHE for Tk buttons in the triangles
-my $tart_win;       # triangle window
-my $ow;             # output window
-my $out;            # output var for out_win
-my $row_num = 15;   # default row number for the triangle
-my $dot_after = 2;  # default: instead of '24' it prints '..'
-my $debug = 0;      # no debug infos in the output window
+my @tartaglia ;     		# AoA used as CACHE
+my @tkcache;        		# AoA used as CACHE for Tk buttons in the triangles
+my $tart_win;       		# triangle window
+my $ow;             		# output window
+my $circle_win;				# addition window used only by the Points in a circle experiment
+my $canv;					# canvas used by the Points in a circle experiment
+my $out;            		# output var for out_win
+my $row_num = 15;   		# default row number for the triangle
+my $dot_after = 2; 			# default: instead of '24' it prints '..'
+my $debug = 0;      		# no debug infos in the output window
 my @possible_colors = qw(red royalblue  orange green yellow violet blue pink purple );
 my %next_col = (red=>'royalblue',royalblue=>'orange',orange=>'green',green=>'yellow',yellow=>'violet',
                 violet=>'blue',blue=>'pink',pink=>'purple',purple=>'red');
-my @colorized;      # array of Tk button yet colorized
-my $size_tile = 8;  # size and boldness of various fonts
+my @colorized;      		# array of Tk button yet colorized
+my @tk_points_and_lines;	# array of canvas circles used by Points in a circle
+my $size_tile = 8;  		# size and boldness of various fonts
 my $bold_tile = 0;
 my $size_help = 13;
 my $bold_help = 1;
@@ -186,8 +189,14 @@ create_experiment (\$input_ssq, \$color_ssq, $title_ssq, \&help_squa, \sub {&sum
 #### PATHS
 my $input_goal;
 my $color_goal = 'red';
-my $title_goal = "Paths to a tile";
+my $title_goal = "Paths to a tile   row col";
 create_experiment (\$input_goal, \$color_goal, $title_goal,\&help_paths, \sub {&distinct_paths($input_goal, $color_goal)});
+
+#### POINTS IN A CIRCLE
+my $input_points;
+my $color_points = 'red';
+my $title_points = "Points in a cirlce    row";
+create_experiment (\$input_points, \$color_points, $title_points,\&help_points, \sub {&points_in_a_circle($input_points, $color_points)});
 
 
 
@@ -457,7 +466,7 @@ sub bin_exp{ #plagiarized from crazyinsomniac at http://www.perlmonks.org/?node_
 sub col_eval {
     my $color = shift;
     my $to_eval = shift;
-    if ($to_eval =~ /system|exec|`/){tar_print "not safe\n";return}
+    if ($to_eval =~ /system|exec|`/){tar_print "[$to_eval] is not safe\n";return}
     foreach my $row (0..$row_num) {
             my @vals = &tartaglia_row($row);
             my $i = 0;
@@ -475,6 +484,7 @@ sub col_eval {
 sub distinct_paths {
     my $goal = shift;
 	my $color = shift;
+	tar_print "\n\n*** Distinct paths to a tile\n\n";
 	my ($goal_x, $goal_y) = split /\s+/, $goal;
 	if ($goal_y > $goal_x){
 		tar_print  "The tile at coordinates $goal_x - $goal_y is outside the triangle\n";
@@ -493,6 +503,81 @@ sub distinct_paths {
 	&colorize ($tkcache[$goal_x][$goal_y], $color);
 	
 }
+################################################################################
+sub points_in_a_circle {
+	my $row = shift;
+	tar_print "\n\n*** Points in a circle:\t $row points\n\n";
+	# check if there is something to do
+	if ($row == 0 or $row == 1){
+		tar_print "with $row point not even segments can be draw\n";
+		return;
+	}	
+	my $color = shift;
+	my $circle;
+	## check window existence
+	if (! Exists($circle_win)) {
+		$circle_win = $mw->Toplevel(-title=>'Points in a cirlce');
+		$circle_win->Icon(-image => $mw->Pixmap(-data => &tart_icon));
+		$canv=$circle_win->Canvas(	-background=>'gray',
+									-width => 610, 
+									-height => 610
+		)->pack;
+	   	$circle_win->title(" Points in a circle ");
+		$circle = $canv->createOval(10,10,600,600,
+				-fill => 'white', 
+				-width => 2 );
+	}
+	else {
+		$circle_win->deiconify( ) if $circle_win->state() eq 'iconic';
+		$circle_win->raise( ) if $circle_win->state() eq 'withdrawn';
+	}
+	# clear previous points
+	# $canv is globally defined at top
+	if (defined $tk_points_and_lines[0]){
+		map {$canv->delete($_)} @tk_points_and_lines;
+	}
+	my @nums = tartaglia_row($row);
+	# first 1s are not used in this experiment
+	shift @nums;
+	tar_print "at row $row numbers (without first 1) are: ",
+				(join ', ',@nums)," ($color tiles)\n";
+	# colorize the row from 1..$#nums+1 beacuse @nums was already shifted
+	map {colorize($tkcache[$row][$_], $color)} 1..$#nums+1;
+	# draw points and line segments on the circle
+	my @points;
+	# sin and cos they think in rad not in degrees!!
+	my $ang = 3.141592653589793238462643383279 * 2 / $row;
+	tar_print "angle: $ang radiants\n" if $debug;
+	my $cur = 0;
+	for (1..$row){
+		# thanks tybalt89 who corrected me on offset
+		# see http://www.perlmonks.org/?node_id=1212200
+		my $x = 305 + int(295*sin($cur));
+		my $y =  5 + 300 - int (295*cos($cur));
+		tar_print "at $cur radiants point at: $x $y\n" if $debug;
+		my $dot = fat_dot(\$canv,$x,$y);
+		$cur+=$ang;
+		push @points,[$x,$y];
+		push @tk_points_and_lines,$dot;
+	}
+	foreach my $cur_point (0..$#points){
+		foreach my $dest(0..$#points){
+			next if $cur_point == $dest;
+			my $line = $canv->createLine( 
+								$points[$cur_point]->[0],$points[$cur_point]->[1],
+								$points[$dest]->[0],$points[$dest]->[1],
+								-width=> 2,
+			);
+			push @tk_points_and_lines,$line;		
+		}
+	}
+	tar_print "considering shapes with all vertices on the circle you can count:\n";
+	my @shape_descr = (qw(point segment triangle quadrilateral pentagon	hexagon heptagon octagon),
+					map{ $_.'-gon' }9..50);
+	foreach my $number(@nums){
+		tar_print "\t$number ",( shift @shape_descr ).( $number > 1 ? 's' : '' ),"\n";		
+	}	
+}
 
 ################################################################################
 #   UTILITY SUBROUTINES
@@ -506,6 +591,18 @@ sub create_experiment{
     $frame->Optionmenu(-options => [@possible_colors],-variable => $color)->pack(-side => 'left',-expand => 1);
     $frame->Button(-text => "Colorize",-borderwidth => 4, -command => $sub_ref)->pack(-side => 'left',-expand => 1);
     $frame->Button(-text => "Clear",-borderwidth => 4, -command => \&decolorize)->pack(-side => 'left',-expand => 1);
+}
+###############################################################################
+sub fat_dot {
+  # canvas reference and center of the new fat dot
+  my ($canv,$x,$y) = @_;
+  # offset to create the quadrilater in which the circle will be draw
+  my $offset = 4;
+  # canvas and top left and bottom right coords of the 
+  # rectangle where the cirlce will be draw
+  my ($x1,$y1,$x2,$y2) = ($x-$offset,$y-$offset,$x+$offset,$y+$offset);
+  my $dot = $$canv->createOval($x1,$y1,$x2,$y2,-fill => 'black');
+  return $dot;
 }
 ##################################################################################
 sub paths_colorizer{
@@ -766,6 +863,21 @@ sub help {
 }
 ################################################################################
 #     HELP TEXTS SUBROUTINES
+################################################################################
+sub help_points{
+    return <<EOH
+* Points in a circle  *
+
+USAGE: pass the number of a row
+
+Given a row n, placing n points into a cirlce and joining them with line segments the corrispective numbers in the nth row of the triangle (apart from the first 1s) are the number of points, segments, triangles, quadrilateres, pentagones.. with all vertex relying in the circumference.
+
+This experiment will open a new window where a circle is draw and points and segments are placed.
+In the output window the correlation between numbers in the nth row and numbers of geometrical shapes is shown.
+
+
+EOH
+}
 ################################################################################
 sub help_paths  {
 # demostrantion gently provided by hdb as found in perlmonks.org
