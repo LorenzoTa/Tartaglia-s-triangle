@@ -186,8 +186,14 @@ create_experiment (\$input_ssq, \$color_ssq, $title_ssq, \&help_squa, \sub {&sum
 #### PATHS
 my $input_goal;
 my $color_goal = 'red';
-my $title_goal = "Paths to a tile";
+my $title_goal = "Paths to a tile   row col";
 create_experiment (\$input_goal, \$color_goal, $title_goal,\&help_paths, \sub {&distinct_paths($input_goal, $color_goal)});
+
+#### POINTS IN A CIRCLE
+my $input_points;
+my $color_points = 'red';
+my $title_points = "Points in a cirlce    row";
+create_experiment (\$input_points, \$color_points, $title_points,\&help_points, \sub {&points_in_a_circle($input_points, $color_points)});
 
 
 
@@ -493,6 +499,16 @@ sub distinct_paths {
 	&colorize ($tkcache[$goal_x][$goal_y], $color);
 	
 }
+################################################################################
+sub points_in_a_circle {
+
+}
+# my $input_points;
+# my $color_points = 'red';
+# my $title_points = "Points in a cirlce";
+# create_experiment (\$input_points, \$color_points, $title_points,\&help_points, \sub {&points_in_a_circle($input_points, $color_points)});
+
+
 
 ################################################################################
 #   UTILITY SUBROUTINES
@@ -766,6 +782,17 @@ sub help {
 }
 ################################################################################
 #     HELP TEXTS SUBROUTINES
+################################################################################
+sub help_points{
+    return <<EOH
+* Points in a circle  *
+
+USAGE: ...
+
+....
+
+EOH
+}
 ################################################################################
 sub help_paths  {
 # demostrantion gently provided by hdb as found in perlmonks.org
