@@ -872,6 +872,20 @@ USAGE: pass the number of a row
 
 Given a row n, placing n points into a cirlce and joining them with line segments the corrispective numbers in the nth row of the triangle (apart from the first 1s) are the number of points, line segments, triangles, quadrilateres, pentagones.. with all vertex relying in the circumference.
 
+In other words, given a circle draw points on it from 1 to any number you want and draw all the possible lines between them: you'll see line segments, or if you put 3 or more point, some polygons. The number of each type of geometrical shape are binomial coefficients as shown by the Tartaglia's triangle.
+Id est: skipping the first diagonal (all 1s),if  the second one (counting numbers) holds how many points you drawn on a circle then others numbers in the row are how many line segments, trinagles, quadrilaters, pentagons, hexagons, heptagons ... are possible with all vertices on the circle.
+
+
+  points        line
+in a circle   segments    triangles   quadrilaters    pentagons   hexagons
+
+    1            -            -            -               -          -
+    2            1            -            -               -          -
+    3            3            1            -               -          -
+    4            6            4            1               -          -
+    5            10           10           5               1          -
+    6            15           20           15              6          1
+
 This experiment will open a new window where a circle is draw and points and line segments are placed.
 In the output window the correlation between numbers in the nth row and numbers of geometrical shapes is shown.
 
@@ -1249,21 +1263,6 @@ If you trow a coin three times you can have these results:
 Id est: 1 time 3 heads, 3 times 2 heads and 1 tail, 3 times 2 tails and 1 heads, 1 time 3 tails.
 This is the sequence 1 3 3 1, the 3th row of the triangle, the coefficients of the cubic expansion of (a+b).
 
-
-Incredibly for me, binomial expansion describes also the geometrical 'points in a circle' scenario.
-Given a circle draw points on it for 1 to any number you want and draw all the possible lines between them: you'll see line segments, or if you put 3 or more point, some polygons. The number of each type of geometrical shape are binomial coefficients as shown by the Tartaglia's triangle.
-Id est: skipping the first diagonal (all 1s),if  the second one (counting numbers) holds how many points you drawn on a circle then others numbers in the row are how many line segments, trinagles, quadrilaters, pentagons, hexagons, heptagons ... are possible with all vertices on the circle.
-
-
-  points
-in a circle   segments    triangles   quadrilaters    pentagons   hexagons
-
-    1            -            -            -               -          -
-    2            1            -            -               -          -
-    3            3            1            -               -          -
-    4            6            4            1               -          -
-    5            10           10           5               1          -
-    6            15           20           15              6          1
 EOH
 }
 ################################################################################
