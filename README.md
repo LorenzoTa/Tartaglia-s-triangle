@@ -1,7 +1,7 @@
 # Tartaglia-s-triangle
 Tartaglia's or Pascal's triangle - 18 fun experiments with the Tartaglia's triangle a perl Tk program
 
-* Introduction *
+ Introduction
 
 In Italy, the arithmetic triangle is called Tartglia's triangle, because exposed in the "General trattato di numeri et misure" written in 1556 by Niccolò Fontana (1499 ca, Brescia 13 December 1557, Venice), known also as Tartaglia.
 
@@ -26,7 +26,7 @@ where n is the row and k is the position, both counting from 0.
 
 
 
-* Experiments Panel *
+Experiments Panel 
 
 At the top you have the Properties Configuration: This allows the user to determine and/or display:
  * How many rows to draw
@@ -49,17 +49,17 @@ The experiments looks very similar:
  * And the colorize/clear buttons
 
 
-* Other properties of the triangle *
+ Other properties of the triangle 
 
--The triangle is symmetrical.
--Some of the numbers in Tartaglia's triangle correlate to numbers in Lozanic''s triangle
--The only number that appears once is 2.
--All entries in row n are odd if and only if the binary representation of n consists of 1s.
--If p is a prime, then every internal entry in row p ^ n (with n as any positive integer) is divisible by p.
+*The triangle is symmetrical.
+*Some of the numbers in Tartaglia's triangle correlate to numbers in Lozanic''s triangle
+*The only number that appears once is 2.
+*All entries in row n are odd if and only if the binary representation of n consists of 1s.
+*If p is a prime, then every internal entry in row p ^ n (with n as any positive integer) is divisible by p.
 
 
 
-* Further readings and credits *
+ Further readings and credits
 
 This software is written in Perl and would not be possible without the aid of the community of www.perlmonks.org (just plagiarized some bit from crazyinsomniac, Anonymous, helped by ambrus and wjw and many others).
 
