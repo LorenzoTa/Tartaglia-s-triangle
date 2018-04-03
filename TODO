@@ -2,8 +2,6 @@
 
 -Add a first experiment to show the creation of the triangle
 
--add an experiment of points in a circle (need to build a separate tk window with circle, points segments..)
-
 -add an experiment about binary representation: All entries in row n are odd if and only if the binary representation of n consists of 1s
 
 -add multilanguage support
