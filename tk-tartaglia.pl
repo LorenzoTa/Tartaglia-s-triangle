@@ -198,14 +198,8 @@ my $color_points = 'red';
 my $title_points = "Points in a cirlce    row";
 create_experiment (\$input_points, \$color_points, $title_points,\&help_points, \sub {&points_in_a_circle($input_points, $color_points)});
 
-
-
 tar_print "Welcome to Tartaglia's triangle fun offered by Discipulus as found at www.perlmonks.org";
 &draw_triangle;
-
-#tar_print "MainWindow geometry: ",$mw->geometry(),"\n";
-#    tar_print "Triangle geometry: ",$tart_win->geometry(),"\n";
-#    tar_print "output geometry: ",$ow->geometry(),"\n";
 
 MainLoop;
 ################################################################################
@@ -736,11 +730,7 @@ sub destroy_tri {
         $tart_win->destroy();
         undef @colorized;
     }
-    #tar_print "MainWindow geometry: ",$mw->geometry(),"\n";
-    #tar_print "Triangle geometry: ",$tart_win->geometry(),"\n";
-    #tar_print "output geometry: ",$ow->geometry(),"\n";
 }
-
 ################################################################################
 sub draw_triangle {
   my $scrolledframe;
@@ -781,8 +771,6 @@ sub draw_triangle {
  tar_print "\n\n";
 }
 ################################################################################
-#{
-# my @tartaglia ; #AoA used as CACHE
 sub tartaglia {
       my ($x,$y) = @_; #tar_print "\t\treceiving ".($y)." $x\t";
       if ($x == 0 or $y == 0)  { $tartaglia[$x][$y]=1 ; tar_print "\tFORCED: 1\n" if $debug;return 1};
@@ -795,7 +783,6 @@ sub tartaglia {
       $tartaglia[$x][$y] = $ret;
       return $ret;
 }
-#}
 ################################################################################
 sub tartaglia_row {
     my $y = shift;
@@ -836,7 +823,6 @@ sub outwin {
                       -foreground => 'green',
                       #NO -data => \$cont,
     )->pack(-expand => 1, -fill => 'both');
-    #tie *STDOUT,  $txt, $txt;
     return $txt;
 }
 ################################################################################
@@ -847,7 +833,6 @@ sub help {
     my $chars = 'Courier '.$size_help.' '.($bold_help ? 'bold' : '');
     $hw->geometry("900x450+0+0");
     $hw->optionAdd('*Text.font' => $chars, 20); #'Courier 13 bold'
-    #$hw->optionAdd( '*Text.background'=>   'royalblue', 20 );
     $hw->title(" help ");
     my $txt = $hw->Scrolled('Text',
                       -background=>'white',
