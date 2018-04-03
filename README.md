@@ -1,5 +1,5 @@
 # Tartaglia-s-triangle
-Tartaglia's or Pascal's triangle - 17 fun experiments with the Tartaglia's triangle a perl Tk program
+Tartaglia's or Pascal's triangle - 18 fun experiments with the Tartaglia's triangle a perl Tk program
 
 * Introduction *
 
