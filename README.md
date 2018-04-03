@@ -61,7 +61,7 @@ The experiments looks very similar:
 
  Further readings and credits
 
-This software is written in Perl and would not be possible without the aid of the community of www.perlmonks.org (just plagiarized some bit from crazyinsomniac, Anonymous, helped by ambrus and wjw and many others).
+This software is written in Perl and would not be possible without the aid of the community of www.perlmonks.org (just plagiarized some bit from crazyinsomniac, Anonymous, helped by ambrus and wjw. For the paths experiment LanX, hdb, VinsWorldcom, roboticus, oiskuu, tybalt89 and Eily. Again tybalt89 for the points in a circle experiment).
 
 If you want learn even more properties of the Tartaglia's triangle (seems impossible but there are more) consider worth a visit to:
 
