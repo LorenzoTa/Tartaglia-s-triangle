@@ -198,8 +198,14 @@ my $color_points = 'red';
 my $title_points = "Points in a cirlce    row";
 create_experiment (\$input_points, \$color_points, $title_points,\&help_points, \sub {&points_in_a_circle($input_points, $color_points)});
 
+
+
 tar_print "Welcome to Tartaglia's triangle fun offered by Discipulus as found at www.perlmonks.org";
 &draw_triangle;
+
+#tar_print "MainWindow geometry: ",$mw->geometry(),"\n";
+#    tar_print "Triangle geometry: ",$tart_win->geometry(),"\n";
+#    tar_print "output geometry: ",$ow->geometry(),"\n";
 
 MainLoop;
 ################################################################################
@@ -503,7 +509,7 @@ sub points_in_a_circle {
 	tar_print "\n\n*** Points in a circle:\t $row points\n\n";
 	# check if there is something to do
 	if ($row == 0 or $row == 1){
-		tar_print "with $row point not even segments can be draw\n";
+		tar_print "with $row point no line segments can be draw\n";
 		return;
 	}	
 	my $color = shift;
@@ -566,7 +572,7 @@ sub points_in_a_circle {
 		}
 	}
 	tar_print "considering shapes with all vertices on the circle you can count:\n";
-	my @shape_descr = (qw(point segment triangle quadrilateral pentagon	hexagon heptagon octagon),
+	my @shape_descr = ('point', 'line segment',qw(triangle quadrilateral pentagon	hexagon heptagon octagon),
 					map{ $_.'-gon' }9..50);
 	foreach my $number(@nums){
 		tar_print "\t$number ",( shift @shape_descr ).( $number > 1 ? 's' : '' ),"\n";		
@@ -730,7 +736,11 @@ sub destroy_tri {
         $tart_win->destroy();
         undef @colorized;
     }
+    #tar_print "MainWindow geometry: ",$mw->geometry(),"\n";
+    #tar_print "Triangle geometry: ",$tart_win->geometry(),"\n";
+    #tar_print "output geometry: ",$ow->geometry(),"\n";
 }
+
 ################################################################################
 sub draw_triangle {
   my $scrolledframe;
@@ -771,6 +781,8 @@ sub draw_triangle {
  tar_print "\n\n";
 }
 ################################################################################
+#{
+# my @tartaglia ; #AoA used as CACHE
 sub tartaglia {
       my ($x,$y) = @_; #tar_print "\t\treceiving ".($y)." $x\t";
       if ($x == 0 or $y == 0)  { $tartaglia[$x][$y]=1 ; tar_print "\tFORCED: 1\n" if $debug;return 1};
@@ -783,6 +795,7 @@ sub tartaglia {
       $tartaglia[$x][$y] = $ret;
       return $ret;
 }
+#}
 ################################################################################
 sub tartaglia_row {
     my $y = shift;
@@ -823,6 +836,7 @@ sub outwin {
                       -foreground => 'green',
                       #NO -data => \$cont,
     )->pack(-expand => 1, -fill => 'both');
+    #tie *STDOUT,  $txt, $txt;
     return $txt;
 }
 ################################################################################
@@ -833,6 +847,7 @@ sub help {
     my $chars = 'Courier '.$size_help.' '.($bold_help ? 'bold' : '');
     $hw->geometry("900x450+0+0");
     $hw->optionAdd('*Text.font' => $chars, 20); #'Courier 13 bold'
+    #$hw->optionAdd( '*Text.background'=>   'royalblue', 20 );
     $hw->title(" help ");
     my $txt = $hw->Scrolled('Text',
                       -background=>'white',
@@ -855,9 +870,9 @@ sub help_points{
 
 USAGE: pass the number of a row
 
-Given a row n, placing n points into a cirlce and joining them with line segments the corrispective numbers in the nth row of the triangle (apart from the first 1s) are the number of points, segments, triangles, quadrilateres, pentagones.. with all vertex relying in the circumference.
+Given a row n, placing n points into a cirlce and joining them with line segments the corrispective numbers in the nth row of the triangle (apart from the first 1s) are the number of points, line segments, triangles, quadrilateres, pentagones.. with all vertex relying in the circumference.
 
-This experiment will open a new window where a circle is draw and points and segments are placed.
+This experiment will open a new window where a circle is draw and points and line segments are placed.
 In the output window the correlation between numbers in the nth row and numbers of geometrical shapes is shown.
 
 
@@ -1236,8 +1251,8 @@ This is the sequence 1 3 3 1, the 3th row of the triangle, the coefficients of t
 
 
 Incredibly for me, binomial expansion describes also the geometrical 'points in a circle' scenario.
-Given a circle draw points on it for 1 to any number you want and draw all the possible lines between them: you'll see segments, or if you put 3 or more point, some polygons. The number of each type of geometrical shape are binomial coefficients as shown by the Tartaglia's triangle.
-Id est: skipping the first diagonal (all 1s),if  the second one (counting numbers) holds how many points you drawn on a circle then others numbers in the row are how many segments, trinagles, quadrilaters, pentagons, hexagons, heptagons ... are possible with all vertices on the circle.
+Given a circle draw points on it for 1 to any number you want and draw all the possible lines between them: you'll see line segments, or if you put 3 or more point, some polygons. The number of each type of geometrical shape are binomial coefficients as shown by the Tartaglia's triangle.
+Id est: skipping the first diagonal (all 1s),if  the second one (counting numbers) holds how many points you drawn on a circle then others numbers in the row are how many line segments, trinagles, quadrilaters, pentagons, hexagons, heptagons ... are possible with all vertices on the circle.
 
 
   points
