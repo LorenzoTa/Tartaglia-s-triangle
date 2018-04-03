@@ -51,11 +51,11 @@ The experiments looks very similar:
 
  Other properties of the triangle 
 
-*The triangle is symmetrical.
-*Some of the numbers in Tartaglia's triangle correlate to numbers in Lozanic''s triangle
-*The only number that appears once is 2.
-*All entries in row n are odd if and only if the binary representation of n consists of 1s.
-*If p is a prime, then every internal entry in row p ^ n (with n as any positive integer) is divisible by p.
+* The triangle is symmetrical.
+* Some of the numbers in Tartaglia's triangle correlate to numbers in Lozanic''s triangle
+* The only number that appears once is 2.
+* All entries in row n are odd if and only if the binary representation of n consists of 1s.
+* If p is a prime, then every internal entry in row p ^ n (with n as any positive integer) is divisible by p.
 
 
 
