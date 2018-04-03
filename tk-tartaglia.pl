@@ -573,7 +573,7 @@ sub points_in_a_circle {
 	}
 	tar_print "considering shapes with all vertices on the circle you can count:\n";
 	my @shape_descr = ('point', 'line segment',qw(triangle quadrilateral pentagon	hexagon heptagon octagon),
-					map{ $_.'-gon' }9..50);
+					map{ $_.'-gon' }9..$row);
 	foreach my $number(@nums){
 		tar_print "\t$number ",( shift @shape_descr ).( $number > 1 ? 's' : '' ),"\n";		
 	}	
