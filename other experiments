@@ -4,3 +4,9 @@ use Math::Prime::Util::GMP qw/sigma/; will load this wonderful module, so after 
 
 sigma($_)>2*$_  
 which shows the distribution of abundants number in the triangle: which seems interesting
+
+OR 
+
+use Math::Prime::Util::GMP qw/is_semiprime/;
+is_semiprime($_)
+
