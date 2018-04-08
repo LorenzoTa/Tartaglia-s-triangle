@@ -6,6 +6,7 @@ use Time::HiRes qw ( sleep );
 use POSIX;
 use Tk;
 use Tk::Pane;
+	 use Tk::LabFrame;
 ################################################################################
 #   SOME GLOBAL DECLARATION
 ################################################################################
@@ -37,20 +38,36 @@ use subs 'tar_print';
 ################################################################################
 my $mw = MainWindow->new ();
     $mw->Icon(-image => $mw->Pixmap(-data => &tart_icon));
-    $mw->geometry("688x861+0+0"); #->geometry("300x450+0+0"); 320+0
+#$mw->geometry("688x861+0+0"); #->geometry("300x450+0+0"); 320+0
+ $mw->geometry("800x661+0+0"); #->geometry("300x450+0+0"); 320+0
     $mw->title(" command ");
     #$mw->optionAdd('*font', 'Courier 10');
     $mw->optionAdd('*Label.font', 'Courier 10');
     $mw->optionAdd( '*Entry.background',   'lavender' );
     $mw->optionAdd( '*Entry.font',   'Courier 12 bold'  );
     my $scrolled_top = $mw->Scrolled('Frame',
-                      -background=>'white',
-                      -scrollbars => 'osoe',)->pack(-expand => 1, -fill => 'both');
-                      
-my $fr0 = $scrolled_top->Frame(-borderwidth => 2, -relief => 'groove')->pack(-side=>'top',-pady=>10);
-    $fr0->Label(-text => "-Tartaglia's triangle properties-" )->pack(-pady=>10);
+	#-label=> 'scrolled top frame',
+	#-labelside => "acrosstop",
 
-my  $fr1 = $scrolled_top->Frame(-borderwidth => 2, -relief => 'groove')->pack(-side=>'top',-anchor=>'w',-pady=>5); #,-fill=>'x'
+	                  #-background=>'white',
+                      -scrollbars => 'osoe',
+					  )->pack(-expand => 1, -fill => 'both');
+                      
+my $fr0 = $scrolled_top->LabFrame(
+									-label=> "Tartaglia triangle properties",
+									-labelside => "acrosstop",    
+									#-borderwidth => 2, 
+									#-relief => 'groove'
+									)->pack(-fill=>'x',-expand=>1,-side=>'top',-padx=>10);
+    $fr0->Label(-justify=>'left',-text => 
+				"Here you can configure the appearence of the triangle and of others windows.\n".
+				"If you modify the appearence of the triangle you must delete and redraw it,\n".
+				"using the appropriate buttons."
+				# "\n\nUse the 'Introduction' buttom to get some general information about\n".
+				# "the triangle and the program."
+				)->pack(-pady=>10,-expand => 1);
+#-borderwidth => 2, -relief => 'groove'
+my  $fr1 = $fr0->Frame()->pack(-side=>'top',-anchor=>'w',-pady=>5); #,-fill=>'x'
     $fr1->Label(-text => "Rows in the triangle: from 0 to ")->pack(-side => 'left');#,-expand => 1, -fill=>'x'
     $fr1->Entry(-width => 3,-borderwidth => 4, -textvariable => \$row_num)->pack(-side => 'left', -expand => 1,-padx=>5); #-side => 'left', -expand => 1, -fill=>'x'
     $fr1->Label(-text => "Tiles font size")->pack(-side => 'left',-expand => 1);
@@ -58,149 +75,505 @@ my  $fr1 = $scrolled_top->Frame(-borderwidth => 2, -relief => 'groove')->pack(-s
     $fr1->Label(-text => "bold")->pack(-side => 'left',-expand => 1);
     $fr1->Checkbutton( -variable =>\$bold_tile )->pack(-side => 'left', -expand => 1);
     $fr1->Button(-padx=> 5,-text => "introduction",-borderwidth => 4, -command => sub{&help(\&help_intro)})->pack(-side => 'right',-expand => 1,-padx=>5);#128
-
-my $fr2 = $scrolled_top->Frame(-borderwidth => 2, -relief => 'groove')->pack(-side=>'top',-anchor=>'w',-pady=>5);
-  $fr2->Label(-text => "Numbers as dot if ")->pack(-side => 'left',-expand => 1);
-  $fr2->Radiobutton(-text => "1",-variable => \$dot_after, -value=>'1')->pack(-side => 'left',-expand => 1);
-  $fr2->Radiobutton(-text => "2",-variable => \$dot_after, -value=>'2')->pack(-side => 'left',-expand => 1);
-  $fr2->Radiobutton(-text => "3",-variable => \$dot_after, -value=>'3')->pack(-side => 'left',-expand => 1);
-  $fr2->Radiobutton(-text => "4",-variable => \$dot_after, -value=>'4')->pack(-side => 'left',-expand => 1);
-  $fr2->Radiobutton(-text => "never",-variable => \$dot_after, -value=>'9999')->pack(-side => 'left',-expand => 1);
-  $fr2->Label(-text => " digits.  Print debug information")->pack(-side => 'left',-expand => 1);
-  $fr2->Checkbutton( -variable =>\$debug,-command => sub { tar_print "Debug info ".($debug ? 'enabled' : 'disabled')."\n" })->pack();
-
-my $fr2a = $scrolled_top->Frame(-borderwidth => 2, -relief => 'groove')->pack(-side=>'top',-anchor=>'w',-pady=>5);
-   $fr2a->Label(-text => "Size of help texts")->pack(-side => 'left',-expand => 1);
-   $fr2a->Entry(-width => 3,-borderwidth => 4, -textvariable => \$size_help)->pack(-side => 'left', -expand => 1,-padx=>5); #-side => 'left', -expand => 1, -fill=>'x'
-   $fr2a->Label(-text => "bold")->pack(-side => 'left',-expand => 1);
-   $fr2a->Checkbutton( -variable =>\$bold_help )->pack(-side => 'left', -expand => 1);
-   $fr2a->Label(-text => "                 Size of output ")->pack(-side => 'left',-expand => 1);
-   $fr2a->Entry(-width => 3,-borderwidth => 4, -textvariable => \$size_out)->pack(-side => 'left', -expand => 1,-padx=>5); #-side => 'left', -expand => 1, -fill=>'x'
-   $fr2a->Label(-text => "bold")->pack(-side => 'left',-expand => 1);
-   $fr2a->Checkbutton( -variable =>\$bold_out )->pack(-side => 'left', -expand => 1);
-
-my $fr3 = $scrolled_top->Frame(-background => 'white')->pack(-side=>'top',-pady=>5);
-  $fr3->Button(-padx=> 20,-text => "draw triangle",-borderwidth => 4, -command => \&draw_triangle)->pack(-side => 'left',-expand => 1,-padx=>5);
-  $fr3->Button(-padx=> 20,-text => "delete triangle",-borderwidth => 4, -command => \&destroy_tri )->pack(-side => 'left',-expand => 1,-padx=>5);
+						#-borderwidth => 2, -relief => 'groove'
+my $fr2 = $fr0->Frame()->pack(-side=>'top',-anchor=>'w',-pady=>5);
+	$fr2->Label(-text => "Numbers as dot if ")->pack(-side => 'left',-expand => 1);
+	$fr2->Radiobutton(-text => "1",-variable => \$dot_after, -value=>'1')->pack(-side => 'left',-expand => 1);
+	$fr2->Radiobutton(-text => "2",-variable => \$dot_after, -value=>'2')->pack(-side => 'left',-expand => 1);
+	$fr2->Radiobutton(-text => "3",-variable => \$dot_after, -value=>'3')->pack(-side => 'left',-expand => 1);
+	$fr2->Radiobutton(-text => "4",-variable => \$dot_after, -value=>'4')->pack(-side => 'left',-expand => 1);
+	$fr2->Radiobutton(-text => "never",-variable => \$dot_after, -value=>'9999')->pack(-side => 'left',-expand => 1);
+	$fr2->Label(-text => " digits.  Print debug information")->pack(-side => 'left',-expand => 1);
+	$fr2->Checkbutton( -variable =>\$debug,-command => sub { tar_print "Debug info ".($debug ? 'enabled' : 'disabled')."\n" })->pack();
+						#-borderwidth => 2, -relief => 'groove'
+my $fr2a = $fr0->Frame()->pack(-side=>'top',-anchor=>'w',-pady=>5);
+	$fr2a->Label(-text => "Size of help texts")->pack(-side => 'left',-expand => 1);
+	$fr2a->Entry(-width => 3,-borderwidth => 4, -textvariable => \$size_help)->pack(-side => 'left', -expand => 1,-padx=>5); #-side => 'left', -expand => 1, -fill=>'x'
+	$fr2a->Label(-text => "bold")->pack(-side => 'left',-expand => 1);
+	$fr2a->Checkbutton( -variable =>\$bold_help )->pack(-side => 'left', -expand => 1);
+	$fr2a->Label(-text => "                 Size of output ")->pack(-side => 'left',-expand => 1);
+	$fr2a->Entry(-width => 3,-borderwidth => 4, -textvariable => \$size_out)->pack(-side => 'left', -expand => 1,-padx=>5); #-side => 'left', -expand => 1, -fill=>'x'
+	$fr2a->Label(-text => "bold")->pack(-side => 'left',-expand => 1);
+	$fr2a->Checkbutton( -variable =>\$bold_out )->pack(-side => 'left', -expand => 1);
+						#-background => 'white'
+my $fr3 = $fr0->Frame()->pack(-side=>'top',-pady=>5);
+	$fr3->Button(-padx=> 20,-text => "draw triangle",-borderwidth => 4, -command => \&draw_triangle)->pack(-side => 'left',-expand => 1,-padx=>5);
+	$fr3->Button(-padx=> 20,-text => "delete triangle",-borderwidth => 4, -command => \&destroy_tri )->pack(-side => 'left',-expand => 1,-padx=>5);
 
 ################################################################################
 #   EXPERIMENTS CREATION FRAME
 ################################################################################
-my $fr4 = $scrolled_top->Frame(-borderwidth => 2, -relief => 'groove')->pack(-side=>'top',-pady=>10);
-    $fr4->Label(-text => "-Tartaglia's triangle experiments-" )->pack(-pady=>10);
+my $fr4 = $scrolled_top->LabFrame(
+									-label=>'experiments',
+									-labelside=>'acrosstop',
+									)->pack(
+										-fill=>'x',-expand=>1,-side=>'top',
+										-padx=>10);
+#$fr4->Label(-justify=>'left',-text => "Click an experiment button to open it" )->pack(-expand=>1,-fill=>'x');
 
+my $fr4a = $fr4->Frame()->pack(-side=>'top',-pady=>5);
+
+my $fr5_exp;# = $scrolled_top->LabFrame(	-label=>$current_exp,
+			#						-labelside=>'acrosstop',
+			#						)->pack(-fill=>'x',-expand=>1,-side=>'top',-padx=>10);
+##### VALUES IN A ROW
+my $input_a_row; 
+my $color_a_row='red';
+my $title_row = "Value of a row";
+my $label_row = "This experiment simply shows values in a given row.\n".
+	"Please note that in the triangle first row is 0, as the first column, so\n".
+	"the tile at the edge has coordinates 0-0\n".
+	"Enter a value from 0 to ".$row_num." and then click the button to have\n".
+	"the tiles in the row colorized and some output in it's own window.\n";
+my $hint_a_row = "row number";									
+# $a_row is named beacause later ->invoke
+my $a_row = $fr4a->Button(	-padx=> 20,-text => "Value of a row",-borderwidth => 1, 
+							-command => \sub{
+									show_experiment (
+										\$input_a_row,
+										\$color_a_row,
+										$title_row,
+										$label_row,
+										\&help_points, 
+										$hint_a_row,
+										\&show_a_row,
+									);				 
+							 }	)->pack(-side => 'left',-expand => 1,-padx=>5);
 ##### BINOMIAL EXPANSION
 my $input_bin;
 my $color_bin = 'red';
-my $title_bin = "Binomial Expansion (a+b)^";
-create_experiment (\$input_bin, \$color_bin, $title_bin, \&help_bin, \sub { $input_bin=~s/\s+//g;
-                                                                &given_coord($color_bin,$input_bin." 0-$input_bin");
-                                                                &bin_exp($input_bin)});
-##### POWERS OF TWO
+my $title_bin = "Binomial Expansion";
+my $label_bin = "Terms on a row n are coefficients of the binomial expansion (a + b)^n\n".
+	"Put in the entry box the power you want to calculate for the binomial (a + b)\n".
+	"The corrispondent row will be colorized with choosen color and the full\n".
+	"expansion of the binomial will be printed on the screen.\n";
+my $hint_bin = "(a+b)^";	
+$fr4a->Button(-padx=> 20,-text => "Binomial Expansion",-borderwidth => 1, 
+				-command => \sub{
+									show_experiment (
+										\$input_bin,
+										\$color_bin,
+										$title_bin,
+										$label_bin,
+										\&help_bin, 
+										$hint_bin,
+										sub { $input_bin=~s/\s+//g;
+                                               &given_coord($color_bin,$input_bin." 0-$input_bin");
+                                               &bin_exp($input_bin)}
+									);				 
+							 }	)->pack(-side => 'left',-expand => 1,-padx=>5);
+	
+##### POWERS OF 2
 my $input_p2;
 my $color_p2 = 'red';
-my $title_p2 = "Powers of 2            2^";
-create_experiment (\$input_p2, \$color_p2, $title_p2, \&help_pow2, \sub {power_of_two($input_p2,$color_p2)} );
-
-##### POWERS OF ELEVEN
+my $title_p2 = "Powers of 2";
+my $label_p2 = "The summation of terms on row n corresponds to 2^n\n";
+my $hint_p2 = "2^";	
+	
+$fr4a->Button(-padx=> 20,-text => $title_p2,-borderwidth => 1, 
+				-command => \sub{
+									show_experiment (
+										\$input_p2,
+										\$color_p2,
+										$title_p2,
+										$label_p2,
+										\&help_pow2, 
+										$hint_p2,
+										sub { $input_p2=~s/^\s+//g;
+                                               &power_of_two($input_p2,$color_p2);
+											   
+											   }
+									);				 
+							 }	)->pack(-side => 'left',-expand => 1,-padx=>5);
+# POWERS OF 11				
 my $input_p11;
 my $color_p11 = 'red';
-my $title_p11 = "Powers of 11          11^";
-create_experiment (\$input_p11, \$color_p11, $title_p11,\&help_pow11,\sub {power_of_eleven($input_p11,$color_p11)} );
+my $title_p11 = "Powers of 11";
+my $label_p11 = "Terms on a row n can be used to calculate 11^n\n";
+my $hint_p11 = "11^";	
 
+# create_experiment (\$input_p11, \$color_p11, $title_p11,\&help_pow11,\sub {power_of_eleven($input_p11,$color_p11)} );
+				
+$fr4a->Button(	-padx=> 20,-text => "Powers of 11",-borderwidth => 1, 
+				-command  => \sub{
+									show_experiment (
+										\$input_p11,
+										\$color_p11,
+										$title_p11,
+										$label_p11,
+										\&help_pow11, 
+										$hint_p11,
+										sub { $input_p11=~s/^\s+//g;
+                                               power_of_eleven($input_p11,$color_p11);											   
+										}
+									);				 
+								}	
+				)->pack(-side => 'left',-expand => 1,-padx=>5);
+	
+	
 ##### FIBONACCI
 my $input_fib;
 my $color_fib = 'red';
-my $title_fib = "Fibonacci         max row";
-create_experiment (\$input_fib, \$color_fib, $title_fib,\&help_fib,\sub {fibonacci($input_fib,$color_fib)} );
+my $title_fib = "Fibonacci";
+my $label_fib = "Fibonacci numbers are obtained summing all the values present in a diagonal\n".
+				"of the triangle. In this experiment the color choosen is not take in count.\n";
+my $hint_fib = "max row";
+
+#create_experiment (\$input_fib, \$color_fib, $title_fib,\&help_fib,\sub {fibonacci($input_fib,$color_fib)} );
+$fr4a->Button(-padx=> 20,-text => "Fibonacci",-borderwidth => 1, 
+				-command  => \sub{
+									show_experiment (
+										\$input_fib,
+										\$color_fib,
+										$title_fib,
+										$label_fib,
+										\&help_fib, 
+										$hint_fib,
+										sub { $input_fib=~s/^\s+//g;
+                                            fibonacci($input_fib,$color_fib);											   
+										}
+									);				 
+								}	
+				)->pack(-side => 'left',-expand => 1,-padx=>5);
+
+# anpther row of buttons
+my $fr4b = $fr4->Frame()->pack(-expand=>1,-fill=>'x',-side=>'top',-pady=>5);
 
 ##### PRIME NUMBERS
 my $input_pri;
 my $color_pri = 'red';
-my $title_pri = "Prime numbers     max row";
-create_experiment (\$input_pri, \$color_pri, $title_pri,\&help_pri,\sub {is_prime($input_pri,$color_pri)} );
+my $title_pri = "Prime numbers";
+my $label_pri ="Shows distribution of prime numbers on the triangle.\n";
+my $hint_pri = "max row";
+#create_experiment (\$input_pri, \$color_pri, $title_pri,\&help_pri,\sub {is_prime($input_pri,$color_pri)} );
+$fr4b->Button(-padx=> 20,-text => "Prime numbers",-borderwidth => 1, 
+				-command  => \sub{
+									show_experiment (
+										\$input_pri,
+										\$color_pri,
+										$title_pri,
+										$label_pri,
+										\&help_pri, 
+										$hint_pri,
+										sub { $input_pri=~s/^\s+//g;
+                                            is_prime($input_pri,$color_pri);											   
+										}
+									);				 
+								}	
+				)->pack(-side => 'left',-expand => 1,-padx=>5);
 
 ### POLYGONAL NUMBERS
 my $input_tri;
 my $color_tri = 'red';
-my $title_tri = "Triangular numbers    num";
-create_experiment (\$input_tri, \$color_tri, $title_tri, \&help_tri, \sub {&triangulars($input_tri, $color_tri)});
+my $title_tri = "Triangular numbers";
+my $label_tri = "The third diagonal of the triangle is formed by triangular numbers.\n".
+				"Choice which triangular number you want to show.\n".
+				"The fourth diagonal holds tetrahedral numbers. Learn more in the informations window.\n";
+my $hint_tri ="num";
+#create_experiment (\$input_tri, \$color_tri, $title_tri, \&help_tri, \sub {&triangulars($input_tri, $color_tri)});
+				
+
+$fr4b->Button(-padx=> 20,-text => "Triangular numbers",-borderwidth => 1, 
+				 -command  => \sub{
+									show_experiment (
+										\$input_tri,
+										\$color_tri,
+										$title_tri,
+										$label_tri,
+										\&help_tri, 
+										$hint_tri,
+										sub { $input_tri=~s/^\s+//g;
+                                            triangulars($input_tri, $color_tri);											   
+										}
+									);				 
+								}	
+				)->pack(-side => 'left',-expand => 1,-padx=>5);
 
 #### COORDINATES
 my $input_coord;
 my $color_coord = 'red';
 my $title_coord = "Colorize by coordinates";
-create_experiment (\$input_coord, \$color_coord, $title_coord,\&help_bycoord, \sub {&given_coord($color_coord ,$input_coord)});
+my $label_coord = "This is not really an experiment but a way to colorize tiles feeding coordinates.\n".
+					"Row and column (both starting from 0) must be separated by space.\n".
+					"To specify multiple coordinated use the comma.\n".
+					"A term can also be specified as a range like in 0-6\n".
+					"Example 6 4, 7 0-7";
+my $hint_coord = "coordinates";
+# create_experiment (\$input_coord, \$color_coord, $title_coord,\&help_bycoord, \sub {&given_coord($color_coord ,$input_coord)});
+$fr4b->Button(-padx=> 20,-text => "Colorize by coordinates",-borderwidth => 1, 
+				 -command  => \sub{
+									show_experiment (
+										\$input_coord,
+										\$color_coord,
+										$title_coord,
+										$label_coord,
+										\&help_bycoord, 
+										$hint_coord,
+										sub { $input_coord=~s/^\s+//g;
+                                            given_coord($color_coord ,$input_coord);											   
+										}
+									);				 
+								}	
+				)->pack(-side => 'left',-expand => 1,-padx=>5);
 
-### DAVID'S STAR
+
+### DAVID STAR
 my $input_star;
 my $color_star = 'red';
-my $title_star = "David's star   row col";
-create_experiment (\$input_star, \$color_star, $title_star, \&help_david, \sub {&david_star($input_star, $color_star)});
+my $title_star = "David star";
+my $label_star = "Shows the pattern of a David star around a tile and it's properties.\n";
+my $hint_star = "row colum";
+# create_experiment (\$input_star, \$color_star, $title_star, \&help_david, \sub {&david_star($input_star, $color_star)});
+				
+$fr4b->Button(-padx=> 20,-text => $title_star ,-borderwidth => 1, 
+				 -command  => \sub{
+									show_experiment (
+										\$input_star,
+										\$color_star,
+										$title_star,
+										$label_star,
+										\&help_david, 
+										$hint_star,
+										sub { $input_star=~s/^\s+//g;
+                                            david_star($input_star, $color_star);											   
+										}
+									);				 
+								}	
+				)->pack(-side => 'left',-expand => 1,-padx=>5);
+# another row of buttons
+my $fr4c = $fr4->Frame()->pack(-expand=>1,-fill=>'x',-side=>'top',-pady=>5);
 
-### CAPELAN
+### CATALAN
 my $input_cat;
 my $color_cat = 'red';
-my $title_cat = "Catalan's numbers max row";
-create_experiment (\$input_cat, \$color_cat, $title_cat, \&help_cat, \sub {&catalan($input_cat, $color_cat)});
-
+my $title_cat = "Catalan numbers";
+my $label_cat = "This experiment shows two ways to obtain Catalan numbers from the triangle.\n";
+my $hint_cat ="max row";
+# create_experiment (\$input_cat, \$color_cat, $title_cat, \&help_cat, \sub {&catalan($input_cat, $color_cat)});
+$fr4c->Button(-padx=> 20,-text => "Catalan numbers",-borderwidth => 1, 
+				 -command  => \sub{
+									show_experiment (
+										\$input_cat,
+										\$color_cat,
+										$title_cat,
+										$label_cat,
+										\&help_cat, 
+										$hint_cat,
+										sub { $input_cat=~s/^\s+//g;
+                                            catalan($input_cat, $color_cat);											   
+										}
+									);				 
+								}	
+				)->pack(-side => 'left',-expand => 1,-padx=>5);
 ### MERSENNE AND M PRIMES
 my $input_mer;
 my $color_mer = 'red';
-my $title_mer = "Mersenne numbers  max row";
-create_experiment (\$input_mer, \$color_mer, $title_mer, \&help_mer, \sub {&mersenne($input_mer, $color_mer)});
-
+my $title_mer = "Mersenne numbers";
+my $label_mer = "A Mersenne number is a number which is one less than a power of two.\n".
+				"As every row of the Tartaglia triangle is a power of 2, the sum of\n".
+				"every term in a row, minus 1, is a Mersenne number.";
+my $hint_mer = "max row";
+# create_experiment (\$input_mer, \$color_mer, $title_mer, \&help_mer, \sub {&mersenne($input_mer, $color_mer)});
+$fr4c->Button(-padx=> 20,-text => "Mersenne numbers",-borderwidth => 1, 
+				 -command  => \sub{
+									show_experiment (
+										\$input_mer,
+										\$color_mer,
+										$title_mer,
+										$label_mer,
+										\&help_mer, 
+										$hint_mer,
+										sub { $input_mer=~s/^\s+//g;
+                                            mersenne($input_mer, $color_mer);											   
+										}
+									);				 
+								}	
+				)->pack(-side => 'left',-expand => 1,-padx=>5);
+			
 ### SIERPINSKI
 my $input_sie;
 my $color_sie = 'red';
-my $title_sie = "Sierpinski fractals   num";
-create_experiment (\$input_sie, \$color_sie, $title_sie, \&help_sie, \sub {&sierpinski($input_sie, $color_sie)});
+my $title_sie = "Sierpinski fractals";
+my $label_sie = "Colorizing every tiles divisible by a given number lead to a fractal.\n";
+my $hint_sie = "num";
+# create_experiment (\$input_sie, \$color_sie, $title_sie, \&help_sie, \sub {&sierpinski($input_sie, $color_sie)});
+$fr4c->Button(-padx=> 20,-text => "Sierpinski fractals",-borderwidth => 1, 
+				  -command  => \sub{
+									show_experiment (
+										\$input_sie,
+										\$color_sie,
+										$title_sie,
+										$label_sie,
+										\&help_sie, 
+										$hint_sie,
+										sub { $input_sie=~s/^\s+//g;
+                                            sierpinski($input_sie, $color_sie);											   
+										}
+									);				 
+								}	
+				)->pack(-side => 'left',-expand => 1,-padx=>5);
+				
+				
+$fr4c->Button(-padx=> 20,-text => "Combinations",-borderwidth => 1, 
+				 -command  => \sub{
+									show_experiment (
+										\$input_sie,
+										\$color_sie,
+										$title_sie,
+										$label_sie,
+										\&helpsie, 
+										$hint_sie,
+										sub { $input_sie=~s/^\s+//g;
+                                            sierpinski($input_sie, $color_sie);											   
+										}
+									);				 
+								}	
+				)->pack(-side => 'left',-expand => 1,-padx=>5);
+				 
+my $fr4d = $fr4->Frame()->pack(-expand=>1,-fill=>'x',-side=>'top',-pady=>5);
+$fr4d->Button(-padx=> 20,-text => "Colorize by evaluatation",-borderwidth => 1, 
+				 -command => \&destroy_tri )->pack(-side => 'left',-expand => 1,-padx=>5);
 
-### COMBINATIONS
-my $input_com;
-my $color_com = 'red';
-my $title_com = "Combinations      row col";
-create_experiment (\$input_com, \$color_com, $title_com, \&help_com, \sub {&combination($input_com, $color_com)});
-
-### EVALUATION
-my $input_eval;
-my $color_eval = 'red';
-my $title_eval = "Colorize by evaluation";
-create_experiment (\$input_eval, \$color_eval, $title_eval, \&help_eval, \sub {&col_eval($color_eval ,$input_eval)});
-
-### HOCKEY STICK PATTERN
-my $input_hoc;
-my $color_hoc = 'red';
-my $title_hoc = "Hockey stick      row col";
-create_experiment (\$input_hoc, \$color_hoc, $title_hoc, \&help_hockey, \sub {&hockeystick($input_hoc, $color_hoc)});
-
-### PARALLELOGRAM PATTERN
-my $input_par;
-my $color_par = 'red';
-my $title_par = "Parallelogram     row col";
-create_experiment (\$input_par, \$color_par, $title_par, \&help_para, \sub {&parallelogram($input_par, $color_par)});
-
-### SUM OF SQUARES
-my $input_ssq;
-my $color_ssq = 'red';
-my $title_ssq = "Sum of squares in the row";
-create_experiment (\$input_ssq, \$color_ssq, $title_ssq, \&help_squa, \sub {&sum_squares($input_ssq, $color_ssq)});
-
-#### PATHS
-my $input_goal;
-my $color_goal = 'red';
-my $title_goal = "Paths to a tile   row col";
-create_experiment (\$input_goal, \$color_goal, $title_goal,\&help_paths, \sub {&distinct_paths($input_goal, $color_goal)});
-
-#### POINTS IN A CIRCLE
-my $input_points;
-my $color_points = 'red';
-my $title_points = "Points in a cirlce    row";
-create_experiment (\$input_points, \$color_points, $title_points,\&help_points, \sub {&points_in_a_circle($input_points, $color_points)});
+$fr4d->Button(-padx=> 20,-text => "Hockey stick",-borderwidth => 1, 
+				 -command => \&destroy_tri )->pack(-side => 'left',-expand => 1,-padx=>5);
+$fr4d->Button(-padx=> 20,-text => "Parallelogram",-borderwidth => 1, 
+				 -command => \&destroy_tri )->pack(-side => 'left',-expand => 1,-padx=>5);
+$fr4d->Button(-padx=> 20,-text => "Sum of squares",-borderwidth => 1, 
+				 -command => \&destroy_tri )->pack(-side => 'left',-expand => 1,-padx=>5);
+$fr4d->Button(-padx=> 20,-text => "Paths to a tile",-borderwidth => 1, 
+				 -command => \&destroy_tri )->pack(-side => 'left',-expand => 1,-padx=>5);
 
 
+my $fr4e = $fr4->Frame()->pack(-expand=>1,-fill=>'x',-side=>'top',-pady=>5);
+$fr4e->Button(-padx=> 20,-text => "Points in a circle",-borderwidth => 1, 
+				 -command => sub{
+				 #### POINTS IN A CIRCLE
+				my $input_points;
+				my $color_points = 'red';
+				my $title_points = "Points in a cirlce    row";
+				show_experiment (\$input_points, \$color_points, $title_points,\&help_points, \sub {&points_in_a_circle($input_points, $color_points)});
 
-tar_print "Welcome to Tartaglia's triangle fun offered by Discipulus as found at www.perlmonks.org";
+				 
+				 }
+				 
+				 
+				 )->pack(-side => 'left',-expand => 1,-padx=>5);
+				 
+
+									
+$a_row->invoke;				 
+# ##### BINOMIAL EXPANSION
+# my $input_bin;
+# my $color_bin = 'red';
+# my $title_bin = "Binomial Expansion (a+b)^";
+# create_experiment (\$input_bin, \$color_bin, $title_bin, \&help_bin, \sub { $input_bin=~s/\s+//g;
+                                                                # &given_coord($color_bin,$input_bin." 0-$input_bin");
+                                                                # &bin_exp($input_bin)});
+# ##### POWERS OF TWO
+# my $input_p2;
+# my $color_p2 = 'red';
+# my $title_p2 = "Powers of 2            2^";
+# create_experiment (\$input_p2, \$color_p2, $title_p2, \&help_pow2, \sub {power_of_two($input_p2,$color_p2)} );
+
+# ##### POWERS OF ELEVEN
+# my $input_p11;
+# my $color_p11 = 'red';
+# my $title_p11 = "Powers of 11          11^";
+# create_experiment (\$input_p11, \$color_p11, $title_p11,\&help_pow11,\sub {power_of_eleven($input_p11,$color_p11)} );
+
+# ##### FIBONACCI
+# my $input_fib;
+# my $color_fib = 'red';
+# my $title_fib = "Fibonacci         max row";
+# create_experiment (\$input_fib, \$color_fib, $title_fib,\&help_fib,\sub {fibonacci($input_fib,$color_fib)} );
+
+# ##### PRIME NUMBERS
+# my $input_pri;
+# my $color_pri = 'red';
+# my $title_pri = "Prime numbers     max row";
+# create_experiment (\$input_pri, \$color_pri, $title_pri,\&help_pri,\sub {is_prime($input_pri,$color_pri)} );
+
+# ### POLYGONAL NUMBERS
+# my $input_tri;
+# my $color_tri = 'red';
+# my $title_tri = "Triangular numbers    num";
+# create_experiment (\$input_tri, \$color_tri, $title_tri, \&help_tri, \sub {&triangulars($input_tri, $color_tri)});
+
+# #### COORDINATES
+# my $input_coord;
+# my $color_coord = 'red';
+# my $title_coord = "Colorize by coordinates";
+# create_experiment (\$input_coord, \$color_coord, $title_coord,\&help_bycoord, \sub {&given_coord($color_coord ,$input_coord)});
+
+# ### DAVID STAR
+# my $input_star;
+# my $color_star = 'red';
+# my $title_star = "David star   row col";
+# create_experiment (\$input_star, \$color_star, $title_star, \&help_david, \sub {&david_star($input_star, $color_star)});
+
+# ### CAPELAN
+# my $input_cat;
+# my $color_cat = 'red';
+# my $title_cat = "Catalan numbers max row";
+# create_experiment (\$input_cat, \$color_cat, $title_cat, \&help_cat, \sub {&catalan($input_cat, $color_cat)});
+
+# ### MERSENNE AND M PRIMES
+# my $input_mer;
+# my $color_mer = 'red';
+# my $title_mer = "Mersenne numbers  max row";
+# create_experiment (\$input_mer, \$color_mer, $title_mer, \&help_mer, \sub {&mersenne($input_mer, $color_mer)});
+
+# ### SIERPINSKI
+# my $input_sie;
+# my $color_sie = 'red';
+# my $title_sie = "Sierpinski fractals   num";
+# create_experiment (\$input_sie, \$color_sie, $title_sie, \&help_sie, \sub {&sierpinski($input_sie, $color_sie)});
+
+# ### COMBINATIONS
+# my $input_com;
+# my $color_com = 'red';
+# my $title_com = "Combinations      row col";
+# create_experiment (\$input_com, \$color_com, $title_com, \&help_com, \sub {&combination($input_com, $color_com)});
+
+# ### EVALUATION
+# my $input_eval;
+# my $color_eval = 'red';
+# my $title_eval = "Colorize by evaluation";
+# create_experiment (\$input_eval, \$color_eval, $title_eval, \&help_eval, \sub {&col_eval($color_eval ,$input_eval)});
+
+# ### HOCKEY STICK PATTERN
+# my $input_hoc;
+# my $color_hoc = 'red';
+# my $title_hoc = "Hockey stick      row col";
+# create_experiment (\$input_hoc, \$color_hoc, $title_hoc, \&help_hockey, \sub {&hockeystick($input_hoc, $color_hoc)});
+
+# ### PARALLELOGRAM PATTERN
+# my $input_par;
+# my $color_par = 'red';
+# my $title_par = "Parallelogram     row col";
+# create_experiment (\$input_par, \$color_par, $title_par, \&help_para, \sub {&parallelogram($input_par, $color_par)});
+
+# ### SUM OF SQUARES
+# my $input_ssq;
+# my $color_ssq = 'red';
+# my $title_ssq = "Sum of squares in the row";
+# create_experiment (\$input_ssq, \$color_ssq, $title_ssq, \&help_squa, \sub {&sum_squares($input_ssq, $color_ssq)});
+
+# #### PATHS
+# my $input_goal;
+# my $color_goal = 'red';
+# my $title_goal = "Paths to a tile   row col";
+# create_experiment (\$input_goal, \$color_goal, $title_goal,\&help_paths, \sub {&distinct_paths($input_goal, $color_goal)});
+
+# #### POINTS IN A CIRCLE
+# my $input_points;
+# my $color_points = 'red';
+# my $title_points = "Points in a cirlce    row";
+# create_experiment (\$input_points, \$color_points, $title_points,\&help_points, \sub {&points_in_a_circle($input_points, $color_points)});
+
+
+
+tar_print "Welcome to Tartaglia triangle fun offered by Discipulus as found at www.perlmonks.org";
 &draw_triangle;
 
 #tar_print "MainWindow geometry: ",$mw->geometry(),"\n";
@@ -208,6 +581,100 @@ tar_print "Welcome to Tartaglia's triangle fun offered by Discipulus as found at
 #    tar_print "output geometry: ",$ow->geometry(),"\n";
 
 MainLoop;
+
+sub show_experiment{
+	my ($input, $color, $title, $label, $help, $hint, $sub_ref) = @_;
+	$fr5_exp->packForget if Tk::Exists($fr5_exp); 
+	$fr5_exp = $scrolled_top->LabFrame(	-label=>$title,
+									-labelside=>'acrosstop',
+									)->pack(-fill=>'x',-expand=>1,-side=>'top',-padx=>10);
+	my $frame_label = $fr5_exp->Frame()->pack(-side=>'top',-anchor=>'w',-pady=>5,-padx=>5);
+		$frame_label->Label(-text => $label,-justify=>'left')->pack(-side => 'left',-expand=>1);
+		#$frame_label->Button(-text => "info about $title",-borderwidth => 2, -command => sub {&help($help)} )->pack(-side => 'left',-expand => 1);
+     
+	
+	#OK $fr5_exp->Entry(-width => 25,-borderwidth => 4,-textvariable => $input)->pack(-side => 'left',-expand => 1);
+	#OK $fr5_exp->Button(-text => "Colorize",-borderwidth => 4, -command =>sub{&$sub_ref($$input)})->pack(-side => 'left',-expand => 1);
+
+	my $frame_run = $fr5_exp->Frame()->pack(-side=>'top',-anchor=>'w',-pady=>2,-padx=>5);
+	 
+    $frame_run->Label(-text => $hint,-justify=>'left'
+						)->pack(-side => 'left',-fill=>'x');
+	$frame_run->Entry(-width => 25,-borderwidth => 4,-textvariable => $input
+						)->pack(-side => 'left',-expand => 1);
+	$frame_run->Optionmenu(-options => [@possible_colors],-variable => $color
+						)->pack(-side => 'left',-expand => 1);
+	$frame_run->Button(	-text => " Run ",-borderwidth => 4, 
+						-command =>sub{return unless defined $$input; &$sub_ref($$input)}
+						)->pack(-side => 'left',-expand => 1);
+	$frame_run->Button(	-text => "Clear",-borderwidth => 4, 
+						-command => \&decolorize
+						)->pack(-side => 'left',-expand => 1);
+	$frame_run->Button(	-text => "info about $title",-borderwidth => 4, 
+						-command => sub {&help($help)} 
+						)->pack(-side => 'left',-expand => 1);
+    
+	# my $frame_help = $fr5_exp->Frame()->pack(-side=>'top',-anchor=>'w',-pady=>2,-padx=>5);
+	# $frame_help->Button(-text => "info about $title",-borderwidth => 2, -command => sub {&help($help)} )->pack(-side => 'left',-expand => 1);
+     
+	
+}
+
+################################################################################
+# sub show_experiment{
+    # my ($input, $title, $label, $help, $sub_ref) = @_;
+	# #my $frame = $scrolled_top->Frame(-borderwidth => 2, -relief => 'groove')->pack(-side=>'top',-anchor=>'w',-pady=>5);
+    # #$widget->destroy if Tk::Exists($widget);
+	# #print "DEBUG: \$input $input \$sub_ref $sub_ref\n";
+	# $fr5->destroy if Tk::Exists($fr5);
+	# $fr5 = $scrolled_top->LabFrame()->pack(-fill=>'x',-expand=>1,-side=>'top',-padx=>10);
+	# my $frame_label = $fr5->Frame()->pack(-side=>'top',-anchor=>'w',-pady=>2,-padx=>5);
+    	# $frame_label->Label(-text => $label,-justify=>'left')->pack(-side => 'left',-fill=>'x');
+	# my $input_bis;
+	# my $frame_run = $fr5->Frame()->pack(-side=>'top',-anchor=>'w',-pady=>2,-padx=>5);
+    # $frame_run->Label(-text => "row number",-justify=>'left')->pack(-side => 'left',-fill=>'x');
+	# $frame_run->Entry(-width => 25,-borderwidth => 4,-textvariable => \$input_bis)->pack(-side => 'left',-expand => 1);
+	# $frame_run->Button(-text => "Colorize",-borderwidth => 4, -command =>
+# [$sub_ref
+	# #$$sub_ref->(\$input_bis);
+# ,$input_bis]
+	# #$sub_ref,
+# #sub{&$$sub_ref($input_bis)}
+# #[ sub { &$$sub_ref },$input_bis] 
+# #[\&$$sub_ref, $input_bis]
+# )->pack(-side => 'left',-expand => 1);
+
+	
+    # $frame_run->Button(-text => "Clear",-borderwidth => 4, -command => \&decolorize)->pack(-side => 'left',-expand => 1);
+	
+	# my $frame_help = $fr5->Frame()->pack(-side=>'top',-anchor=>'w',-pady=>2,-padx=>5);
+    
+	# $fr5->Button(-text => "?",-borderwidth => 2, -command => sub {&help($help)} )->pack(-side => 'left',-expand => 1);
+    # $fr5->configure(-label=>$title,-labelside=>'acrosstop');
+	
+	# #$fr5->Label(-text => (pack 'A25', $title) )->pack(-side => 'left',-expand => 1);
+    # #$fr5->Entry(-width => 25,-borderwidth => 4,-textvariable => $input)->pack(-side => 'left',-expand => 1);
+    # #$fr5->Optionmenu(-options => [@possible_colors],-variable => $color)->pack(-side => 'left',-expand => 1);
+    # #$fr5->Button(-text => "Colorize",-borderwidth => 4, -command => $sub_ref)->pack(-side => 'left',-expand => 1);
+    # #$fr5->Button(-text => "Clear",-borderwidth => 4, -command => \&decolorize)->pack(-side => 'left',-expand => 1);
+# }
+#########################################################################################
+sub show_a_row{
+	my $row  = shift;
+	
+	tar_print "\n\n*** Values in row  $row\n\n";
+}
+################################################################################
+# sub create_experiment{
+    # my ($input, $color, $title, $help, $sub_ref) = @_;
+	# my $frame = $scrolled_top->Frame(-borderwidth => 2, -relief => 'groove')->pack(-side=>'top',-anchor=>'w',-pady=>5);
+    # $frame->Button(-text => "?",-borderwidth => 2, -command => sub {&help($help)} )->pack(-side => 'left',-expand => 1);
+    # $frame->Label(-text => (pack 'A25', $title) )->pack(-side => 'left',-expand => 1);
+    # $frame->Entry(-width => 25,-borderwidth => 4,-textvariable => $input)->pack(-side => 'left',-expand => 1);
+    # $frame->Optionmenu(-options => [@possible_colors],-variable => $color)->pack(-side => 'left',-expand => 1);
+    # $frame->Button(-text => "Colorize",-borderwidth => 4, -command => $sub_ref)->pack(-side => 'left',-expand => 1);
+    # $frame->Button(-text => "Clear",-borderwidth => 4, -command => \&decolorize)->pack(-side => 'left',-expand => 1);
+# }
 ################################################################################
 #   EXPERIMENTS SUBROUTINES
 ################################################################################
@@ -311,7 +778,7 @@ sub sierpinski{
 sub mersenne{
     my ($input,$color)=@_;
     my @mersenne;
-    tar_print "\n\n*** Mersenne's numbers and Mersenne's primes (max row $input)\n\n";
+    tar_print "\n\n*** Mersenne numbers and Mersenne primes (max row $input)\n\n";
     foreach my $row (0..$input){
             my $cur;
             map {$cur += $_ } tartaglia_row($row);
@@ -319,7 +786,7 @@ sub mersenne{
             given_coord($color,"$row 0-".$row);
             $color = $next_col{$color};
     }
-    tar_print "\nMersenne's numbers found in first $input rows:\n";
+    tar_print "\nMersenne numbers found in first $input rows:\n";
     foreach my $n (@mersenne){
               tar_print "$n ",( check_prime($n) ? "Mersenne prime " : ''),"\n";      #check_prime($n)
     }
@@ -330,7 +797,7 @@ sub catalan{
     my ($input,$color)=@_;
     my @catalan;
     my $natural = 1;
-    tar_print "\n\n*** Catalan's numbers (max row $input)\n\nNote two methods to generate the serie: the first divide the central term of any odd row ($color tiles) by the correspondant counting number: this gives the right serie: 1 1 2 5 14..\n";
+    tar_print "\n\n*** Catalan numbers (max row $input)\n\nNote two methods to generate the serie: the first divide the central term of any odd row ($color tiles) by the correspondant counting number: this gives the right serie: 1 1 2 5 14..\n";
     tar_print "The second method is the central term of any odd row minus the term two place left, if present ($next_col{$color} tiles). This gives the rigth serie but without the first '1'.\n\n";
     given_coord($next_col{$next_col{$color}}, "0-".int($input / 2 + 1)." 1");
     foreach my $rc (0..$input){
@@ -344,7 +811,7 @@ sub catalan{
        colorize($tkcache[$rc][$mid - 2],$next_col{$color}) if ($mid - 2) >= 0 and defined $tkcache[$rc][$mid - 2];
        $natural++;
     }
-    tar_print "\nCatalan's numbers found in first $input rows:\n",(join ' ', @catalan),"\n\n";
+    tar_print "\nCatalan numbers found in first $input rows:\n",(join ' ', @catalan),"\n\n";
 }
 ################################################################################
 sub david_star {
@@ -361,7 +828,7 @@ sub david_star {
     my @above = tartaglia_row ($row-1);
     my @mid = tartaglia_row ($row);
     my @below = tartaglia_row ($row+1);
-    tar_print "\n\n*** David's star for number $mid[$col] ( $row - $col, $color)\n\n";
+    tar_print "\n\n*** David star for number $mid[$col] ( $row - $col, $color)\n\n";
     tar_print "($next_col tiles)\ngreatest common divisor: GCD ($above[$col-1], $mid[$col+1], $below[$col]) = ",Math::BigInt::bgcd($above[$col-1], $mid[$col+1], $below[$col]),"\n";
     tar_print "product $above[$col-1] x $mid[$col+1] x $below[$col] = ",$above[$col-1] * $mid[$col+1] * $below[$col],"\n";
     tar_print "\n($other_col tiles)\ngreateast common divisor: GCD ($above[$col], $mid[$col-1],$below[$col+1]) = ",Math::BigInt::bgcd($above[$col], $mid[$col-1],$below[$col+1]),"\n";
@@ -390,7 +857,7 @@ sub is_prime{
 sub fibonacci{
       my ($input,$color)=@_;
       if ($input > $row_num){$input=$row_num;tar_print "Warning: too many rows specified. Using $row_num\n" if $debug}
-      tar_print "\n\n*** Fibonacci's numbers (max row $input)\n\n";
+      tar_print "\n\n*** Fibonacci numbers (max row $input)\n\n";
       my @aoa_vals = map {[tartaglia_row($_)]} 0..$input; # why i build triangle by hockey stick pattern?!?!? argh
       my @fibonacci;
       my $fibonacci;
@@ -409,7 +876,7 @@ sub fibonacci{
       $col_i > $#possible_colors ? $col_i=0 : 0;
       }
       map {  my $sum = join '+',@{$_};tar_print $sum,' = ', eval $sum,"\n";$fibonacci.=(eval $sum).' ';} @fibonacci;
-      tar_print "\n\nFibonacci's numbers: $fibonacci\n\n";
+      tar_print "\n\nFibonacci numbers: $fibonacci\n\n";
 }
 ################################################################################
 sub power_of_eleven{
@@ -752,9 +1219,9 @@ sub draw_triangle {
                       -background=>'black',
                       -scrollbars => 'osoe',
     )->pack(-expand => 1, -fill => 'both');
-    $tart_win->title(" Tartaglia's triangle ");
+    $tart_win->title(" Tartaglia triangle ");
     $tart_win->optionAdd('*Button.font' => 'Arial '.$size_tile.' '.($bold_tile ? 'bold' : ''), 20); #'Courier 13 bold'
-    tar_print "\nDRAWING a tartaglia's triangle of ".($row_num + 1)." rows (with dots if $dot_after or more digits)\n\n";
+    tar_print "\nDRAWING a tartaglia triangle of ".($row_num + 1)." rows (with dots if $dot_after or more digits)\n\n";
   }
   else {
     $tart_win->deiconify( ) if $tart_win->state() eq 'iconic';
@@ -872,7 +1339,7 @@ USAGE: pass the number of a row
 
 Given a row n, placing n points into a cirlce and joining them with line segments the corrispective numbers in the nth row of the triangle (apart from the first 1s) are the number of points, line segments, triangles, quadrilateres, pentagones.. with all vertex relying in the circumference.
 
-In other words, given a circle draw points on it from 1 to any number you want and draw all the possible lines between them: you'll see line segments, or if you put 3 or more point, some polygons. The number of each type of geometrical shape are binomial coefficients as shown by the Tartaglia's triangle.
+In other words, given a circle draw points on it from 1 to any number you want and draw all the possible lines between them: you'll see line segments, or if you put 3 or more point, some polygons. The number of each type of geometrical shape are binomial coefficients as shown by the Tartaglia triangle.
 Id est: skipping the first diagonal (all 1s),if  the second one (counting numbers) holds how many points you drawn on a circle then others numbers in the row are how many line segments, trinagles, quadrilaters, pentagons, hexagons, heptagons ... are possible with all vertices on the circle.
 
 
@@ -928,11 +1395,11 @@ will colorize only 13, while
 
   $_ % 7 == 0
 
-will show numbers divisible by 7, reveiling some Sierpinski's pattern too.
+will show numbers divisible by 7, reveiling some Sierpinski pattern too.
 
   $_ > 0
 
-can change the background color of the Tartaglia's triangle.
+can change the background color of the Tartaglia triangle.
 
 EOH
 }
@@ -944,9 +1411,9 @@ sub help_com  {
 USAGE: feed the coordinates of a tile in the form of 'row column'. The row, the column and the tile will be colorized with three different colors.
 The value of combinations with repetition is colorized with another color, to show the correlation between the two.
 
-The Tartaglia's triangle shows the answer to the question: 'how many groups are possible grouping a set of X (row) by Y (column)?'.
+The Tartaglia triangle shows the answer to the question: 'how many groups are possible grouping a set of X (row) by Y (column)?'.
 This is called combination (or k-combination) in mathematic, id est no matter of the order of the elements and no repetition of elements.
-The formula is the binomial coefiicent's one.
+The formula is the binomial coefiicent one.
 
                n!
  C(n,k) =  ----------
@@ -958,7 +1425,7 @@ If an element can be found more than once, we call the result a 'combination wit
 C      = C          =    -------------
  (n,k)    (n+k-1,k)      (n-1)!    k!
 
-Speaking in tartaglia's triangle terms, the answer to a combinations with repetitions, in respect to one without repetitions, will be at the same column but the row will be 'n + k - 1' instead of 'n'.
+Speaking in tartaglia triangle terms, the answer to a combinations with repetitions, in respect to one without repetitions, will be at the same column but the row will be 'n + k - 1' instead of 'n'.
 
 EOH
 }
@@ -1013,7 +1480,7 @@ For the 4th exagonal number the progression has ratio 6-2  = 4.
 1 + 5 + 9 + 13 = 28
 
 
-As you can see, the first column of Tartaglia's Triangle is composed by many 1's.
+As you can see, the first column of Tartaglia Triangle is composed by many 1's.
 The second column contains Counting Numbers, while the 3rd contains Triangular Numbers(2 dimensions).
 The 4th column contains Tetrahedral Numbers (3 dimensions) and the 5th  Pentatope Numbers (4 dimensions) and so on.
 
@@ -1022,8 +1489,8 @@ Cubic numbers can be calculated using tetrahedral ones:
 
 Cubic(n) =  Tetrahedral(n-2) + 4 Tetrahedral(n-1) + Tetrahedral(n)
 
-Might I hazzard a guess that counting numbers are Figurate Numbers of 1 dimension and the 1's series is a series of 0 dimension Figurate Numbers?
-I think you'll find any Figurate Number of any Regular Shape of any Dimension in the Tartaglia's Triangle...
+Might I hazzard a guess that counting numbers are Figurate Numbers of 1 dimension and the 1 series is a series of 0 dimension Figurate Numbers?
+I think you'll find any Figurate Number of any Regular Shape of any Dimension in the Tartaglia Triangle...
 
 EOH
 }
@@ -1061,7 +1528,7 @@ EOH
 ################################################################################
 sub help_sie  {
     return <<EOH
-* Sierpinski's fractals *
+* Sierpinski fractals *
 
 USAGE: just put in the entry box a number. Every tiles will be colorized if divisible by number given
 
@@ -1072,23 +1539,23 @@ EOH
 ################################################################################
 sub help_mer  {
     return <<EOH
-* Mersenne's numbers *
+* Mersenne numbers *
 
-USAGE: just put in the entry box the max row number to be considerated to find Mersenne's numbers from the triangle.
+USAGE: just put in the entry box the max row number to be considerated to find Mersenne numbers from the triangle.
 
-A Mersenne's number is a number which is one less than a power of two. As every row of the Tartaglia's triangle is a power of 2, the sum of every term in a row, minus 1, is a Mersenne's number.
+A Mersenne number is a number which is one less than a power of two. As every row of the Tartaglia triangle is a power of 2, the sum of every term in a row, minus 1, is a Mersenne number.
 
-If a number in such sequence is prime it is called Mersenne's prime. Such primes Mp are correlated with perfect numbers: Euclid (4th century BC) proved that if 2p-1 is prime, then 2p-1(2p - 1) is a perfect number. This number is also expressible as Mp(Mp+1)/2
+If a number in such sequence is prime it is called Mersenne prime. Such primes Mp are correlated with perfect numbers: Euclid (4th century BC) proved that if 2p-1 is prime, then 2p-1(2p - 1) is a perfect number. This number is also expressible as Mp(Mp+1)/2
 EOH
 }
 ################################################################################
 sub help_cat  {
     return <<EOH
-* Catalan's numbers *
+* Catalan numbers *
 
-USAGE: just put in the entry box the max row number to be considerated to find Catalan's numbers from the triangle.
+USAGE: just put in the entry box the max row number to be considerated to find Catalan numbers from the triangle.
 
-I have decided to show on the screen two ways to extract Catalan's numbers from the Tartaglia's triangle: while the first shows the correct serie (1 1 2 5 ..) the second sequence has only one '1' in the beginning. I choose this way beacause both solutions are really tied with the triangle itself.
+I have decided to show on the screen two ways to extract Catalan numbers from the Tartaglia triangle: while the first shows the correct serie (1 1 2 5 ..) the second sequence has only one '1' in the beginning. I choose this way beacause both solutions are really tied with the triangle itself.
 
 EOH
 }
@@ -1113,17 +1580,17 @@ EOH
 ################################################################################
 sub help_fib  {
     return <<EOH
-* Fibonacci's numbers *
+* Fibonacci numbers *
 
-USAGE: just put in the entry box the max row number to be considerated to create a Fibonacci's serie.
+USAGE: just put in the entry box the max row number to be considerated to create a Fibonacci serie.
 
-Fibonacci's numbers are obtained summing all the values present in a diagonal of the triangle.
+Fibonacci numbers are obtained summing all the values present in a diagonal of the triangle.
 In this experiment the color choosen is not take in count.
 
 If you enter '12' as max row you'll obtain a colorfull triangle and in the screen:
 
 
-Fibonacci's numbers (max row 12)
+Fibonacci numbers (max row 12)
 
 1 = 1
 1 = 1
@@ -1140,7 +1607,7 @@ Fibonacci's numbers (max row 12)
 1+11+45+84+70+21+1 = 233
 
 
-Fibonacci's numbers: 1 1 2 3 5 8 13 21 34 55 89 144 233
+Fibonacci numbers: 1 1 2 3 5 8 13 21 34 55 89 144 233
 
 EOH
 }
@@ -1196,16 +1663,16 @@ Id est: this procedure is valid for these three sums: (10+1), (100+1) e (10+0,1)
   1   4   6   4   1      14.641       1.004.006.004.001    10.406,0401
 1   5  10  10   5   1   161.051   1.005.010.010.005.001   105.101,00501
 
-In the same way, if you write the Tartaglia's triangle not in base 10 but in base 'c' you'll be able to read the powers of every sum of two distinct power of 'c'.
+In the same way, if you write the Tartaglia triangle not in base 10 but in base 'c' you'll be able to read the powers of every sum of two distinct power of 'c'.
 
 EOH
 }
 ################################################################################
 sub help_david  {
     return <<EOH
-* David's start  *
+* David start  *
 
-USAGE: feed cordinates of a tile not in the border of the triangle and seven tiles will be colorized: the given one of the color specified, the surrounding other six ones in two different, alternate colors forming a David's star pattern.
+USAGE: feed cordinates of a tile not in the border of the triangle and seven tiles will be colorized: the given one of the color specified, the surrounding other six ones in two different, alternate colors forming a David star pattern.
 
 On the screen will appear three different properties of such pattern as calculation: the two terns share the Greatest Common Divisor and the result of the product of their three terms. Also the product of all six surrounding terms is always an integer perfect square. The last one is obvious: as the product of two terns are equal their product will be a square.
 
@@ -1270,17 +1737,17 @@ sub help_intro  {
     return <<EOH
 * Introduction *
 
-In Italy, the arithmetic triangle is called Tartglia's triangle, because exposed in the "General trattato di numeri et misure" written in 1556 by Niccolò Fontana (1499 ca, Brescia 13 December 1557, Venice), known also as Tartaglia.
+In Italy, the arithmetic triangle is called Tartglia triangle, because exposed in the "General trattato di numeri et misure" written in 1556 by Niccolò Fontana (1499 ca, Brescia 13 December 1557, Venice), known also as Tartaglia.
 
-In 1512 when the French invaded Brescia, a French soldier sliced Niccolò's jaw and palate with a saber. This made it impossible for Niccolò to speak normally, prompting the nickname "Tartaglia" ("stammerer"), which he adopted.
+In 1512 when the French invaded Brescia, a French soldier sliced Niccolò jaw and palate with a saber. This made it impossible for Niccolò to speak normally, prompting the nickname "Tartaglia" ("stammerer"), which he adopted.
 
-Known as Pascal's triangle (but Pascal drawn it as right triangle) in many other countries was known by Halayuda, an Indian commentator, in 10th century, studied around 1100 by Omar Khayyam, a Persian mathematician, known in China as early as 1261 and so studied in India, Greece, Iran, China, Germany and Italy before Pascal.
+Known as Pascal triangle (but Pascal drawn it as right triangle) in many other countries was known by Halayuda, an Indian commentator, in 10th century, studied around 1100 by Omar Khayyam, a Persian mathematician, known in China as early as 1261 and so studied in India, Greece, Iran, China, Germany and Italy before Pascal.
 
 About the program: keep it mind i'm not a mathematician, i was only impressed by the huge amount of things you can see in the triangle and i want to show them.
 
-Many useful things about the tartaglia's triangle are shown using the Experiment Panel, others are enumered at the end of this introduction.
+Many useful things about the tartaglia triangle are shown using the Experiment Panel, others are enumered at the end of this introduction.
 
-When you click a tale of the triangle it's coordinates and it's numerical value are printed on the output window.
+When you click a tale of the triangle it coordinates and it numerical value are printed on the output window.
 
 Remember that the first row is 0 and the first column is also 0. The triangle is constructed by summing the values of two adiacent position in row and putting the result, below them, in the middle. The general formula to calculate any given number in the triangle given the coordinate is also known as "n choose k"
 
@@ -1319,7 +1786,7 @@ The experiments looks very similar:
 * Other properties of the triangle *
 
 -The triangle is symmetrical.
--Some of the numbers in Tartaglia's triangle correlate to numbers in Lozanic''s triangle
+-Some of the numbers in Tartaglia triangle correlate to numbers in Lozanic triangle
 -The only number that appears once is 2.
 -All entries in row n are odd if and only if the binary representation of n consists of 1s.
 -If p is a prime, then every internal entry in row p ^ n (with n as any positive integer) is divisible by p.
@@ -1330,7 +1797,7 @@ The experiments looks very similar:
 
 This software is written in Perl and would not be possible without the aid of the community of www.perlmonks.org (just plagiarized some bit from crazyinsomniac, Anonymous, helped by ambrus and wjw and many others).
 
-If you want learn even more properties of the Tartaglia's triangle (seems impossible but there are more) consider worth a visit to:
+If you want learn even more properties of the Tartaglia triangle (seems impossible but there are more) consider worth a visit to:
 
 http://mathforum.org/mathimages/index.php/Pascal%27s_triangle
 http://www.cut-the-knot.org/arithmetic/combinatorics/PascalTriangleProperties.shtml
