@@ -113,9 +113,8 @@ my $fr4 = $scrolled_top->LabFrame(
 
 my $fr4a = $fr4->Frame()->pack(-side=>'top',-pady=>5);
 
-my $fr5_exp;# = $scrolled_top->LabFrame(	-label=>$current_exp,
-			#						-labelside=>'acrosstop',
-			#						)->pack(-fill=>'x',-expand=>1,-side=>'top',-padx=>10);
+my $fr5_exp;
+
 ##### VALUES IN A ROW
 my $input_a_row; 
 my $color_a_row='red';
@@ -139,6 +138,7 @@ my $a_row = $fr4a->Button(	-padx=> 20,-text => "Value of a row",-borderwidth => 
 										\&show_a_row,
 									);				 
 							 }	)->pack(-side => 'left',-expand => 1,-padx=>5);
+							 
 ##### BINOMIAL EXPANSION
 my $input_bin;
 my $color_bin = 'red';
@@ -161,15 +161,13 @@ $fr4a->Button(-padx=> 20,-text => "Binomial Expansion",-borderwidth => 1,
                                                &given_coord($color_bin,$input_bin." 0-$input_bin");
                                                &bin_exp($input_bin)}
 									);				 
-							 }	)->pack(-side => 'left',-expand => 1,-padx=>5);
-	
+							 }	)->pack(-side => 'left',-expand => 1,-padx=>5);	
 ##### POWERS OF 2
 my $input_p2;
 my $color_p2 = 'red';
 my $title_p2 = "Powers of 2";
 my $label_p2 = "The summation of terms on row n corresponds to 2^n\n";
 my $hint_p2 = "2^";	
-	
 $fr4a->Button(-padx=> 20,-text => $title_p2,-borderwidth => 1, 
 				-command => \sub{
 									show_experiment (
@@ -190,10 +188,7 @@ my $input_p11;
 my $color_p11 = 'red';
 my $title_p11 = "Powers of 11";
 my $label_p11 = "Terms on a row n can be used to calculate 11^n\n";
-my $hint_p11 = "11^";	
-
-# create_experiment (\$input_p11, \$color_p11, $title_p11,\&help_pow11,\sub {power_of_eleven($input_p11,$color_p11)} );
-				
+my $hint_p11 = "11^";
 $fr4a->Button(	-padx=> 20,-text => "Powers of 11",-borderwidth => 1, 
 				-command  => \sub{
 									show_experiment (
@@ -208,9 +203,7 @@ $fr4a->Button(	-padx=> 20,-text => "Powers of 11",-borderwidth => 1,
 										}
 									);				 
 								}	
-				)->pack(-side => 'left',-expand => 1,-padx=>5);
-	
-	
+				)->pack(-side => 'left',-expand => 1,-padx=>5);	
 ##### FIBONACCI
 my $input_fib;
 my $color_fib = 'red';
@@ -218,8 +211,6 @@ my $title_fib = "Fibonacci";
 my $label_fib = "Fibonacci numbers are obtained summing all the values present in a diagonal\n".
 				"of the triangle. In this experiment the color choosen is not take in count.\n";
 my $hint_fib = "max row";
-
-#create_experiment (\$input_fib, \$color_fib, $title_fib,\&help_fib,\sub {fibonacci($input_fib,$color_fib)} );
 $fr4a->Button(-padx=> 20,-text => "Fibonacci",-borderwidth => 1, 
 				-command  => \sub{
 									show_experiment (
@@ -235,17 +226,14 @@ $fr4a->Button(-padx=> 20,-text => "Fibonacci",-borderwidth => 1,
 									);				 
 								}	
 				)->pack(-side => 'left',-expand => 1,-padx=>5);
-
-# anpther row of buttons
+# another row of buttons
 my $fr4b = $fr4->Frame()->pack(-expand=>1,-fill=>'x',-side=>'top',-pady=>5);
-
 ##### PRIME NUMBERS
 my $input_pri;
 my $color_pri = 'red';
 my $title_pri = "Prime numbers";
 my $label_pri ="Shows distribution of prime numbers on the triangle.\n";
 my $hint_pri = "max row";
-#create_experiment (\$input_pri, \$color_pri, $title_pri,\&help_pri,\sub {is_prime($input_pri,$color_pri)} );
 $fr4b->Button(-padx=> 20,-text => "Prime numbers",-borderwidth => 1, 
 				-command  => \sub{
 									show_experiment (
@@ -261,7 +249,6 @@ $fr4b->Button(-padx=> 20,-text => "Prime numbers",-borderwidth => 1,
 									);				 
 								}	
 				)->pack(-side => 'left',-expand => 1,-padx=>5);
-
 ### POLYGONAL NUMBERS
 my $input_tri;
 my $color_tri = 'red';
@@ -270,9 +257,6 @@ my $label_tri = "The third diagonal of the triangle is formed by triangular numb
 				"Choice which triangular number you want to show.\n".
 				"The fourth diagonal holds tetrahedral numbers. Learn more in the informations window.\n";
 my $hint_tri ="num";
-#create_experiment (\$input_tri, \$color_tri, $title_tri, \&help_tri, \sub {&triangulars($input_tri, $color_tri)});
-				
-
 $fr4b->Button(-padx=> 20,-text => "Triangular numbers",-borderwidth => 1, 
 				 -command  => \sub{
 									show_experiment (
@@ -288,7 +272,6 @@ $fr4b->Button(-padx=> 20,-text => "Triangular numbers",-borderwidth => 1,
 									);				 
 								}	
 				)->pack(-side => 'left',-expand => 1,-padx=>5);
-
 #### COORDINATES
 my $input_coord;
 my $color_coord = 'red';
@@ -299,7 +282,6 @@ my $label_coord = "This is not really an experiment but a way to colorize tiles 
 					"A term can also be specified as a range like in 0-6\n".
 					"Example 6 4, 7 0-7";
 my $hint_coord = "coordinates";
-# create_experiment (\$input_coord, \$color_coord, $title_coord,\&help_bycoord, \sub {&given_coord($color_coord ,$input_coord)});
 $fr4b->Button(-padx=> 20,-text => "Colorize by coordinates",-borderwidth => 1, 
 				 -command  => \sub{
 									show_experiment (
@@ -315,16 +297,12 @@ $fr4b->Button(-padx=> 20,-text => "Colorize by coordinates",-borderwidth => 1,
 									);				 
 								}	
 				)->pack(-side => 'left',-expand => 1,-padx=>5);
-
-
 ### DAVID STAR
 my $input_star;
 my $color_star = 'red';
 my $title_star = "David star";
 my $label_star = "Shows the pattern of a David star around a tile and it's properties.\n";
 my $hint_star = "row colum";
-# create_experiment (\$input_star, \$color_star, $title_star, \&help_david, \sub {&david_star($input_star, $color_star)});
-				
 $fr4b->Button(-padx=> 20,-text => $title_star ,-borderwidth => 1, 
 				 -command  => \sub{
 									show_experiment (
@@ -340,17 +318,14 @@ $fr4b->Button(-padx=> 20,-text => $title_star ,-borderwidth => 1,
 									);				 
 								}	
 				)->pack(-side => 'left',-expand => 1,-padx=>5);
-
 # another row of buttons
 my $fr4c = $fr4->Frame()->pack(-expand=>1,-fill=>'x',-side=>'top',-pady=>5);
-
 ### CATALAN
 my $input_cat;
 my $color_cat = 'red';
 my $title_cat = "Catalan numbers";
 my $label_cat = "This experiment shows two ways to obtain Catalan numbers from the triangle.\n";
 my $hint_cat ="max row";
-# create_experiment (\$input_cat, \$color_cat, $title_cat, \&help_cat, \sub {&catalan($input_cat, $color_cat)});
 $fr4c->Button(-padx=> 20,-text => "Catalan numbers",-borderwidth => 1, 
 				 -command  => \sub{
 									show_experiment (
@@ -366,7 +341,6 @@ $fr4c->Button(-padx=> 20,-text => "Catalan numbers",-borderwidth => 1,
 									);				 
 								}	
 				)->pack(-side => 'left',-expand => 1,-padx=>5);
-
 ### MERSENNE AND M PRIMES
 my $input_mer;
 my $color_mer = 'red';
@@ -375,7 +349,6 @@ my $label_mer = "A Mersenne number is a number which is one less than a power of
 				"As every row of the Tartaglia triangle is a power of 2, the sum of\n".
 				"every term in a row, minus 1, is a Mersenne number.";
 my $hint_mer = "max row";
-# create_experiment (\$input_mer, \$color_mer, $title_mer, \&help_mer, \sub {&mersenne($input_mer, $color_mer)});
 $fr4c->Button(-padx=> 20,-text => "Mersenne numbers",-borderwidth => 1, 
 				 -command  => \sub{
 									show_experiment (
@@ -390,15 +363,13 @@ $fr4c->Button(-padx=> 20,-text => "Mersenne numbers",-borderwidth => 1,
 										}
 									);				 
 								}	
-				)->pack(-side => 'left',-expand => 1,-padx=>5);
-			
+				)->pack(-side => 'left',-expand => 1,-padx=>5);			
 ### SIERPINSKI
 my $input_sie;
 my $color_sie = 'red';
 my $title_sie = "Sierpinski fractals";
 my $label_sie = "Colorizing every tiles divisible by a given number lead to a fractal.\n";
 my $hint_sie = "num";
-# create_experiment (\$input_sie, \$color_sie, $title_sie, \&help_sie, \sub {&sierpinski($input_sie, $color_sie)});
 $fr4c->Button(-padx=> 20,-text => "Sierpinski fractals",-borderwidth => 1, 
 				  -command  => \sub{
 									show_experiment (
@@ -414,7 +385,6 @@ $fr4c->Button(-padx=> 20,-text => "Sierpinski fractals",-borderwidth => 1,
 									);				 
 								}	
 				)->pack(-side => 'left',-expand => 1,-padx=>5);
-
 ### COMBINATIONS
 my $input_com;
 my $color_com = 'red';
@@ -422,7 +392,6 @@ my $title_com = "Combinations";
 my $label_com = "The Tartaglia triangle shows the answer to the question: 'how many groups are\n".
 				"possible grouping a set of X (row) by Y (column)?'\n";
 my $hint_com = "row column";
-# create_experiment (\$input_com, \$color_com, $title_com, \&help_com, \sub {&combination($input_com, $color_com)});
 $fr4c->Button(-padx=> 20,-text => "Combinations",-borderwidth => 1, 
 				 -command  => \sub{
 									show_experiment (
@@ -438,10 +407,8 @@ $fr4c->Button(-padx=> 20,-text => "Combinations",-borderwidth => 1,
 									);				 
 								}	
 				)->pack(-side => 'left',-expand => 1,-padx=>5);
-
 # another frame of buttons				
 my $fr4d = $fr4->Frame()->pack(-expand=>1,-fill=>'x',-side=>'top',-pady=>5);
-
 ### EVALUATION
 my $input_eval;
 my $color_eval = 'red';
@@ -450,7 +417,6 @@ my $label_eval = "This experiment is dedicated to Perl programmers.\n".
 				"Each value in the current triangle is checked against the code entered (using \$_)\n".
 				"and if the code returns true the tile will be colorized and it's value printed.\n";
 my $hint_eval = "perl code";
-# create_experiment (\$input_eval, \$color_eval, $title_eval, \&help_eval, \sub {&col_eval($color_eval ,$input_eval)});
 $fr4d->Button(-padx=> 20,-text => "Colorize by evaluatation",-borderwidth => 1, 
 				 -command  => \sub{
 									show_experiment (
@@ -466,7 +432,6 @@ $fr4d->Button(-padx=> 20,-text => "Colorize by evaluatation",-borderwidth => 1,
 									);				 
 								}	
 				)->pack(-side => 'left',-expand => 1,-padx=>5);
-
 ### HOCKEY STICK PATTERN
 my $input_hoc;
 my $color_hoc = 'red';
@@ -474,7 +439,6 @@ my $title_hoc = "Hockey stick pattern";
 my $label_hoc = "Shows that the number at column n in the triangle can be obtained as the summation\n".
 				"of all the numbers in the diagonal from row - 1 column n until the 1 at the border.\n";
 my $hint_hoc = "row column";
-# create_experiment (\$input_hoc, \$color_hoc, $title_hoc, \&help_hockey, \sub {&hockeystick($input_hoc, $color_hoc)});
 $fr4d->Button(-padx=> 20,-text => $title_hoc,-borderwidth => 1, 
 				 -command  => \sub{
 									show_experiment (
@@ -489,8 +453,7 @@ $fr4d->Button(-padx=> 20,-text => $title_hoc,-borderwidth => 1,
 										}
 									);				 
 								}	
-				)->pack(-side => 'left',-expand => 1,-padx=>5);
-				
+				)->pack(-side => 'left',-expand => 1,-padx=>5);				
 ### PARALLELOGRAM PATTERN
 my $input_par;
 my $color_par = 'red';
@@ -499,7 +462,6 @@ my $label_par = "Thi pattern shows that a number in the triangle can be calculat
 				"all numbers in the parallelogram starting from the top edge and ending two\n".
 				"rows above the desired one and finally adding 1 to the summation.\n";
 my $hint_par = "row column";
-# create_experiment (\$input_par, \$color_par, $title_par, \&help_para, \sub {&parallelogram($input_par, $color_par)});
 $fr4d->Button(-padx=> 20,-text => $title_par,-borderwidth => 1, 
 				 -command  => \sub{
 									show_experiment (
@@ -515,7 +477,6 @@ $fr4d->Button(-padx=> 20,-text => $title_par,-borderwidth => 1,
 									);				 
 								}	
 				)->pack(-side => 'left',-expand => 1,-padx=>5);
-
 ### SUM OF SQUARES
 my $input_ssq;
 my $color_ssq = 'red';
@@ -523,7 +484,6 @@ my $title_ssq = "Sum of squares in the row";
 my $label_ssq = "The summation of all term square in the row n is equal\n".
 				"to the central tile of row n * 2\n";
 my $hint_ssq = "row";
-# create_experiment (\$input_ssq, \$color_ssq, $title_ssq, \&help_squa, \sub {&sum_squares($input_ssq, $color_ssq)});
 $fr4d->Button(-padx=> 20,-text => "Sum of squares",-borderwidth => 1, 
 				 -command  => \sub{
 									show_experiment (
@@ -538,8 +498,7 @@ $fr4d->Button(-padx=> 20,-text => "Sum of squares",-borderwidth => 1,
 										}
 									);				 
 								}	
-				)->pack(-side => 'left',-expand => 1,-padx=>5);
-				
+				)->pack(-side => 'left',-expand => 1,-padx=>5);				
 #### PATHS
 my $input_path;
 my $color_path = 'red';
@@ -547,7 +506,6 @@ my $title_path = "Paths to a tile";
 my $label_path = "The value in a tile corresponds to the number of distinct path (with no\n".
 				"lateral nor backward moves) from the top edge to the tile itself.\n";
 my $hint_path = "row column";
-# create_experiment (\$input_goal, \$color_goal, $title_goal,\&help_paths, \sub {&distinct_paths($input_goal, $color_goal)});
 $fr4d->Button(-padx=> 20,-text => $title_path, -borderwidth => 1, 
 				 -command  => \sub{
 									show_experiment (
@@ -563,11 +521,8 @@ $fr4d->Button(-padx=> 20,-text => $title_path, -borderwidth => 1,
 									);				 
 								}	
 				)->pack(-side => 'left',-expand => 1,-padx=>5);
-				
-
 # yet another frame
 my $fr4e = $fr4->Frame()->pack(-expand=>1,-fill=>'x',-side=>'top',-pady=>5);
-
 #### POINTS IN A CIRCLE
 my $input_points;
 my $color_points = 'red';
@@ -576,8 +531,6 @@ my $label_points = "This experiment open a new window with a cirlce where n poin
 					"In the corrispective triangle row all numbers, except the first 1, are\n".
 					"numbers of line segments, triangles, quadrilaterals.. with all vertexes on the circle.\n";
 my $hint_points = "points";
-# create_experiment (\$input_points, \$color_points, $title_points,\&help_points, \sub {&points_in_a_circle($input_points, $color_points)});
-
 $fr4e->Button(-padx=> 20,-text => "Points in a circle",-borderwidth => 1, 
 				 -command  => \sub{
 									show_experiment (
@@ -594,118 +547,8 @@ $fr4e->Button(-padx=> 20,-text => "Points in a circle",-borderwidth => 1,
 								}	
 				)->pack(-side => 'left',-expand => 1,-padx=>5);
 
-									
+# invoke the first experiment									
 $a_row->invoke;				 
-# ##### BINOMIAL EXPANSION
-# my $input_bin;
-# my $color_bin = 'red';
-# my $title_bin = "Binomial Expansion (a+b)^";
-# create_experiment (\$input_bin, \$color_bin, $title_bin, \&help_bin, \sub { $input_bin=~s/\s+//g;
-                                                                # &given_coord($color_bin,$input_bin." 0-$input_bin");
-                                                                # &bin_exp($input_bin)});
-# ##### POWERS OF TWO
-# my $input_p2;
-# my $color_p2 = 'red';
-# my $title_p2 = "Powers of 2            2^";
-# create_experiment (\$input_p2, \$color_p2, $title_p2, \&help_pow2, \sub {power_of_two($input_p2,$color_p2)} );
-
-# ##### POWERS OF ELEVEN
-# my $input_p11;
-# my $color_p11 = 'red';
-# my $title_p11 = "Powers of 11          11^";
-# create_experiment (\$input_p11, \$color_p11, $title_p11,\&help_pow11,\sub {power_of_eleven($input_p11,$color_p11)} );
-
-# ##### FIBONACCI
-# my $input_fib;
-# my $color_fib = 'red';
-# my $title_fib = "Fibonacci         max row";
-# create_experiment (\$input_fib, \$color_fib, $title_fib,\&help_fib,\sub {fibonacci($input_fib,$color_fib)} );
-
-# ##### PRIME NUMBERS
-# my $input_pri;
-# my $color_pri = 'red';
-# my $title_pri = "Prime numbers     max row";
-# create_experiment (\$input_pri, \$color_pri, $title_pri,\&help_pri,\sub {is_prime($input_pri,$color_pri)} );
-
-# ### POLYGONAL NUMBERS
-# my $input_tri;
-# my $color_tri = 'red';
-# my $title_tri = "Triangular numbers    num";
-# create_experiment (\$input_tri, \$color_tri, $title_tri, \&help_tri, \sub {&triangulars($input_tri, $color_tri)});
-
-# #### COORDINATES
-# my $input_coord;
-# my $color_coord = 'red';
-# my $title_coord = "Colorize by coordinates";
-# create_experiment (\$input_coord, \$color_coord, $title_coord,\&help_bycoord, \sub {&given_coord($color_coord ,$input_coord)});
-
-# ### DAVID STAR
-# my $input_star;
-# my $color_star = 'red';
-# my $title_star = "David star   row col";
-# create_experiment (\$input_star, \$color_star, $title_star, \&help_david, \sub {&david_star($input_star, $color_star)});
-
-# ### CAPELAN
-# my $input_cat;
-# my $color_cat = 'red';
-# my $title_cat = "Catalan numbers max row";
-# create_experiment (\$input_cat, \$color_cat, $title_cat, \&help_cat, \sub {&catalan($input_cat, $color_cat)});
-
-# ### MERSENNE AND M PRIMES
-# my $input_mer;
-# my $color_mer = 'red';
-# my $title_mer = "Mersenne numbers  max row";
-# create_experiment (\$input_mer, \$color_mer, $title_mer, \&help_mer, \sub {&mersenne($input_mer, $color_mer)});
-
-# ### SIERPINSKI
-# my $input_sie;
-# my $color_sie = 'red';
-# my $title_sie = "Sierpinski fractals   num";
-# create_experiment (\$input_sie, \$color_sie, $title_sie, \&help_sie, \sub {&sierpinski($input_sie, $color_sie)});
-
-# ### COMBINATIONS
-# my $input_com;
-# my $color_com = 'red';
-# my $title_com = "Combinations      row col";
-# create_experiment (\$input_com, \$color_com, $title_com, \&help_com, \sub {&combination($input_com, $color_com)});
-
-# ### EVALUATION
-# my $input_eval;
-# my $color_eval = 'red';
-# my $title_eval = "Colorize by evaluation";
-# create_experiment (\$input_eval, \$color_eval, $title_eval, \&help_eval, \sub {&col_eval($color_eval ,$input_eval)});
-
-# ### HOCKEY STICK PATTERN
-# my $input_hoc;
-# my $color_hoc = 'red';
-# my $title_hoc = "Hockey stick      row col";
-# create_experiment (\$input_hoc, \$color_hoc, $title_hoc, \&help_hockey, \sub {&hockeystick($input_hoc, $color_hoc)});
-
-# ### PARALLELOGRAM PATTERN
-# my $input_par;
-# my $color_par = 'red';
-# my $title_par = "Parallelogram     row col";
-# create_experiment (\$input_par, \$color_par, $title_par, \&help_para, \sub {&parallelogram($input_par, $color_par)});
-
-# ### SUM OF SQUARES
-# my $input_ssq;
-# my $color_ssq = 'red';
-# my $title_ssq = "Sum of squares in the row";
-# create_experiment (\$input_ssq, \$color_ssq, $title_ssq, \&help_squa, \sub {&sum_squares($input_ssq, $color_ssq)});
-
-# #### PATHS
-# my $input_goal;
-# my $color_goal = 'red';
-# my $title_goal = "Paths to a tile   row col";
-# create_experiment (\$input_goal, \$color_goal, $title_goal,\&help_paths, \sub {&distinct_paths($input_goal, $color_goal)});
-
-# #### POINTS IN A CIRCLE
-# my $input_points;
-# my $color_points = 'red';
-# my $title_points = "Points in a cirlce    row";
-# create_experiment (\$input_points, \$color_points, $title_points,\&help_points, \sub {&points_in_a_circle($input_points, $color_points)});
-
-
 
 tar_print "Welcome to Tartaglia triangle fun offered by Discipulus as found at www.perlmonks.org";
 &draw_triangle;
@@ -724,12 +567,7 @@ sub show_experiment{
 									)->pack(-fill=>'x',-expand=>1,-side=>'top',-padx=>10);
 	my $frame_label = $fr5_exp->Frame()->pack(-side=>'top',-anchor=>'w',-pady=>5,-padx=>5);
 		$frame_label->Label(-text => $label,-justify=>'left')->pack(-side => 'left',-expand=>1);
-		#$frame_label->Button(-text => "info about $title",-borderwidth => 2, -command => sub {&help($help)} )->pack(-side => 'left',-expand => 1);
-     
 	
-	#OK $fr5_exp->Entry(-width => 25,-borderwidth => 4,-textvariable => $input)->pack(-side => 'left',-expand => 1);
-	#OK $fr5_exp->Button(-text => "Colorize",-borderwidth => 4, -command =>sub{&$sub_ref($$input)})->pack(-side => 'left',-expand => 1);
-
 	my $frame_run = $fr5_exp->Frame()->pack(-side=>'top',-anchor=>'w',-pady=>2,-padx=>5);
 	 
     $frame_run->Label(-text => $hint,-justify=>'left'
@@ -746,69 +584,10 @@ sub show_experiment{
 						)->pack(-side => 'left',-expand => 1);
 	$frame_run->Button(	-text => "info about $title",-borderwidth => 4, 
 						-command => sub {&help($help)} 
-						)->pack(-side => 'left',-expand => 1);
-    
-	# my $frame_help = $fr5_exp->Frame()->pack(-side=>'top',-anchor=>'w',-pady=>2,-padx=>5);
-	# $frame_help->Button(-text => "info about $title",-borderwidth => 2, -command => sub {&help($help)} )->pack(-side => 'left',-expand => 1);
-     
-	
+						)->pack(-side => 'left',-expand => 1);	
 }
 
-################################################################################
-# sub show_experiment{
-    # my ($input, $title, $label, $help, $sub_ref) = @_;
-	# #my $frame = $scrolled_top->Frame(-borderwidth => 2, -relief => 'groove')->pack(-side=>'top',-anchor=>'w',-pady=>5);
-    # #$widget->destroy if Tk::Exists($widget);
-	# #print "DEBUG: \$input $input \$sub_ref $sub_ref\n";
-	# $fr5->destroy if Tk::Exists($fr5);
-	# $fr5 = $scrolled_top->LabFrame()->pack(-fill=>'x',-expand=>1,-side=>'top',-padx=>10);
-	# my $frame_label = $fr5->Frame()->pack(-side=>'top',-anchor=>'w',-pady=>2,-padx=>5);
-    	# $frame_label->Label(-text => $label,-justify=>'left')->pack(-side => 'left',-fill=>'x');
-	# my $input_bis;
-	# my $frame_run = $fr5->Frame()->pack(-side=>'top',-anchor=>'w',-pady=>2,-padx=>5);
-    # $frame_run->Label(-text => "row number",-justify=>'left')->pack(-side => 'left',-fill=>'x');
-	# $frame_run->Entry(-width => 25,-borderwidth => 4,-textvariable => \$input_bis)->pack(-side => 'left',-expand => 1);
-	# $frame_run->Button(-text => "Colorize",-borderwidth => 4, -command =>
-# [$sub_ref
-	# #$$sub_ref->(\$input_bis);
-# ,$input_bis]
-	# #$sub_ref,
-# #sub{&$$sub_ref($input_bis)}
-# #[ sub { &$$sub_ref },$input_bis] 
-# #[\&$$sub_ref, $input_bis]
-# )->pack(-side => 'left',-expand => 1);
 
-	
-    # $frame_run->Button(-text => "Clear",-borderwidth => 4, -command => \&decolorize)->pack(-side => 'left',-expand => 1);
-	
-	# my $frame_help = $fr5->Frame()->pack(-side=>'top',-anchor=>'w',-pady=>2,-padx=>5);
-    
-	# $fr5->Button(-text => "?",-borderwidth => 2, -command => sub {&help($help)} )->pack(-side => 'left',-expand => 1);
-    # $fr5->configure(-label=>$title,-labelside=>'acrosstop');
-	
-	# #$fr5->Label(-text => (pack 'A25', $title) )->pack(-side => 'left',-expand => 1);
-    # #$fr5->Entry(-width => 25,-borderwidth => 4,-textvariable => $input)->pack(-side => 'left',-expand => 1);
-    # #$fr5->Optionmenu(-options => [@possible_colors],-variable => $color)->pack(-side => 'left',-expand => 1);
-    # #$fr5->Button(-text => "Colorize",-borderwidth => 4, -command => $sub_ref)->pack(-side => 'left',-expand => 1);
-    # #$fr5->Button(-text => "Clear",-borderwidth => 4, -command => \&decolorize)->pack(-side => 'left',-expand => 1);
-# }
-#########################################################################################
-sub show_a_row{
-	my $row  = shift;
-	
-	tar_print "\n\n*** Values in row  $row\n\n";
-}
-################################################################################
-# sub create_experiment{
-    # my ($input, $color, $title, $help, $sub_ref) = @_;
-	# my $frame = $scrolled_top->Frame(-borderwidth => 2, -relief => 'groove')->pack(-side=>'top',-anchor=>'w',-pady=>5);
-    # $frame->Button(-text => "?",-borderwidth => 2, -command => sub {&help($help)} )->pack(-side => 'left',-expand => 1);
-    # $frame->Label(-text => (pack 'A25', $title) )->pack(-side => 'left',-expand => 1);
-    # $frame->Entry(-width => 25,-borderwidth => 4,-textvariable => $input)->pack(-side => 'left',-expand => 1);
-    # $frame->Optionmenu(-options => [@possible_colors],-variable => $color)->pack(-side => 'left',-expand => 1);
-    # $frame->Button(-text => "Colorize",-borderwidth => 4, -command => $sub_ref)->pack(-side => 'left',-expand => 1);
-    # $frame->Button(-text => "Clear",-borderwidth => 4, -command => \&decolorize)->pack(-side => 'left',-expand => 1);
-# }
 ################################################################################
 #   EXPERIMENTS SUBROUTINES
 ################################################################################
@@ -825,6 +604,12 @@ sub sum_squares {
     my $central = $double[ (int $#double / 2 )];
     given_coord($col2, ($input * 2)." ".((int $#double / 2 )));
     tar_print "the central element of $input x 2 (".($input * 2).") row is $central\n\n";
+}
+#########################################################################################
+sub show_a_row{
+	my $row  = shift;
+	
+	tar_print "\n\n*** Values in row  $row\n\n";
 }
 ################################################################################
 sub parallelogram {
