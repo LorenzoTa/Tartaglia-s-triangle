@@ -6,7 +6,12 @@ use Time::HiRes qw ( sleep );
 use POSIX;
 use Tk;
 use Tk::Pane;
-	 use Tk::LabFrame;
+use Tk::LabFrame;
+
+use Tk::WidgetDump;
+use Tk::ObjScanner;
+
+
 ################################################################################
 #   SOME GLOBAL DECLARATION
 ################################################################################
@@ -39,7 +44,7 @@ use subs 'tar_print';
 my $mw = MainWindow->new ();
     $mw->Icon(-image => $mw->Pixmap(-data => &tart_icon));
 #$mw->geometry("688x861+0+0"); #->geometry("300x450+0+0"); 320+0
- $mw->geometry("800x661+0+0"); #->geometry("300x450+0+0"); 320+0
+ $mw->geometry("760x650+0+0"); #->geometry("300x450+0+0"); 320+0
     $mw->title(" command ");
     #$mw->optionAdd('*font', 'Courier 10');
     $mw->optionAdd('*Label.font', 'Courier 10');
@@ -556,7 +561,7 @@ tar_print "Welcome to Tartaglia triangle fun offered by Discipulus as found at w
 #tar_print "MainWindow geometry: ",$mw->geometry(),"\n";
 #    tar_print "Triangle geometry: ",$tart_win->geometry(),"\n";
 #    tar_print "output geometry: ",$ow->geometry(),"\n";
-
+$mw->WidgetDump;
 MainLoop;
 
 sub show_experiment{
@@ -977,6 +982,8 @@ sub create_experiment{
     $frame->Optionmenu(-options => [@possible_colors],-variable => $color)->pack(-side => 'left',-expand => 1);
     $frame->Button(-text => "Colorize",-borderwidth => 4, -command => $sub_ref)->pack(-side => 'left',-expand => 1);
     $frame->Button(-text => "Clear",-borderwidth => 4, -command => \&decolorize)->pack(-side => 'left',-expand => 1);
+	
+	#Tk::ObjScanner::scan_object($mw);
 }
 ###############################################################################
 sub fat_dot {
@@ -1133,7 +1140,7 @@ sub draw_triangle {
   if (! Exists($tart_win)) {
     $tart_win = $mw->Toplevel();
     $tart_win->Icon(-image => $mw->Pixmap(-data => &tart_icon));
-    $tart_win->geometry("300x450+708+0");
+    $tart_win->geometry("300x450+760+0");# 760x650+0+0
     $scrolledframe = $tart_win->Scrolled('Frame',
                       -background=>'black',
                       -scrollbars => 'osoe',
@@ -1213,7 +1220,7 @@ sub outwin {
     $ow = $mw->Toplevel( );
     $ow->Icon(-image => $mw->Pixmap(-data => &tart_icon));
     my $chars = 'Courier '.$size_out.' '.($bold_out ? 'bold' : '');
-    $ow->geometry("755x429+708+490");
+    $ow->geometry("755x429+760+490"); # 760x650+0+0
     $ow->optionAdd('*Text.font' => $chars, 20); #'Courier 13 bold'
     $ow->title(" output ");
     my $txt = $ow->Scrolled('Text',
