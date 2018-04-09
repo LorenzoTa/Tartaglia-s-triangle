@@ -140,9 +140,11 @@ my $a_row = $fr4a->Button(	-padx=> 20,-text => "Value of a row",-borderwidth => 
 										$label_row,
 										\&help_points, 
 										$hint_a_row,
-										\&show_a_row,
+										sub { $input_a_row=~s/\s+//g;
+                                               show_a_row($color_a_row,$input_a_row);
+                                        }
 									);				 
-							 }	)->pack(-side => 'left',-expand => 1,-padx=>5);
+							 }	)->pack(-side => 'left',-expand => 1,-padx=>5);	
 							 
 ##### BINOMIAL EXPANSION
 my $input_bin;
@@ -612,9 +614,11 @@ sub sum_squares {
 }
 #########################################################################################
 sub show_a_row{
-	my $row  = shift;
+	my ($color, $row)  = @_;
+	given_coord ($color, "$row 0-".$row);
+	tar_print "\n\n*** Values in row  $row\n\n",
+				(join ' ',tartaglia_row($row)),"\n";
 	
-	tar_print "\n\n*** Values in row  $row\n\n";
 }
 ################################################################################
 sub parallelogram {
