@@ -10,3 +10,11 @@ OR
 use Math::Prime::Util::GMP qw/is_semiprime/;
 is_semiprime($_)
 
+OR
+Math::Prime::Util::GMP::is_polygonal($_,3)
+
+OR (if you have a triangle with at least 34 rows..)
+Math::Prime::Util::GMP::is_carmichael($_)
+
+OR
+Math::Prime::Util::GMP::is_fundamental($_)
