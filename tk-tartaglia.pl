@@ -87,7 +87,7 @@ my $fr2 = $fr0->Frame()->pack(-side=>'top',-anchor=>'w',-pady=>5);
 	$fr2->Checkbutton( -variable =>\$debug,-command => sub { tar_print "Debug info ".($debug ? 'enabled' : 'disabled')."\n" })->pack();
 						#-borderwidth => 2, -relief => 'groove'
 my $fr2a = $fr0->Frame()->pack(-side=>'top',-anchor=>'w',-pady=>5);
-	$fr2a->Label(-text => "Size of help texts")->pack(-side => 'left',-expand => 1);
+	$fr2a->Label(-text => "Size of info texts")->pack(-side => 'left',-expand => 1);
 	$fr2a->Entry(-width => 3,-borderwidth => 4, -textvariable => \$size_help)->pack(-side => 'left', -expand => 1,-padx=>5); #-side => 'left', -expand => 1, -fill=>'x'
 	$fr2a->Label(-text => "bold")->pack(-side => 'left',-expand => 1);
 	$fr2a->Checkbutton( -variable =>\$bold_help )->pack(-side => 'left', -expand => 1);
@@ -340,6 +340,7 @@ $fr4b->Button(-padx=> 20,-text => $title_star ,-borderwidth => 1,
 									);				 
 								}	
 				)->pack(-side => 'left',-expand => 1,-padx=>5);
+
 # another row of buttons
 my $fr4c = $fr4->Frame()->pack(-expand=>1,-fill=>'x',-side=>'top',-pady=>5);
 
@@ -365,6 +366,7 @@ $fr4c->Button(-padx=> 20,-text => "Catalan numbers",-borderwidth => 1,
 									);				 
 								}	
 				)->pack(-side => 'left',-expand => 1,-padx=>5);
+
 ### MERSENNE AND M PRIMES
 my $input_mer;
 my $color_mer = 'red';
@@ -412,53 +414,185 @@ $fr4c->Button(-padx=> 20,-text => "Sierpinski fractals",-borderwidth => 1,
 									);				 
 								}	
 				)->pack(-side => 'left',-expand => 1,-padx=>5);
-				
-				
+
+### COMBINATIONS
+my $input_com;
+my $color_com = 'red';
+my $title_com = "Combinations";
+my $label_com = "The Tartaglia triangle shows the answer to the question: 'how many groups are\n".
+				"possible grouping a set of X (row) by Y (column)?'\n";
+my $hint_com = "row column";
+# create_experiment (\$input_com, \$color_com, $title_com, \&help_com, \sub {&combination($input_com, $color_com)});
 $fr4c->Button(-padx=> 20,-text => "Combinations",-borderwidth => 1, 
 				 -command  => \sub{
 									show_experiment (
-										\$input_sie,
-										\$color_sie,
-										$title_sie,
-										$label_sie,
-										\&helpsie, 
-										$hint_sie,
-										sub { $input_sie=~s/^\s+//g;
-                                            sierpinski($input_sie, $color_sie);											   
+										\$input_com,
+										\$color_com,
+										$title_com,
+										$label_com,
+										\&help_com, 
+										$hint_com,
+										sub { $input_com=~s/^\s+//g;
+                                            combination($input_com, $color_com);											   
 										}
 									);				 
 								}	
 				)->pack(-side => 'left',-expand => 1,-padx=>5);
-				 
+
+# another frame of buttons				
 my $fr4d = $fr4->Frame()->pack(-expand=>1,-fill=>'x',-side=>'top',-pady=>5);
+
+### EVALUATION
+my $input_eval;
+my $color_eval = 'red';
+my $title_eval = "Colorize by evaluation";
+my $label_eval = "This experiment is dedicated to Perl programmers.\n".
+				"Each value in the current triangle is checked against the code entered (using \$_)\n".
+				"and if the code returns true the tile will be colorized and it's value printed.\n";
+my $hint_eval = "perl code";
+# create_experiment (\$input_eval, \$color_eval, $title_eval, \&help_eval, \sub {&col_eval($color_eval ,$input_eval)});
 $fr4d->Button(-padx=> 20,-text => "Colorize by evaluatation",-borderwidth => 1, 
-				 -command => \&destroy_tri )->pack(-side => 'left',-expand => 1,-padx=>5);
+				 -command  => \sub{
+									show_experiment (
+										\$input_eval,
+										\$color_eval,
+										$title_eval,
+										$label_eval,
+										\&help_eval, 
+										$hint_eval,
+										sub { $input_eval=~s/^\s+//g;
+                                            col_eval($color_eval ,$input_eval);											   
+										}
+									);				 
+								}	
+				)->pack(-side => 'left',-expand => 1,-padx=>5);
 
-$fr4d->Button(-padx=> 20,-text => "Hockey stick",-borderwidth => 1, 
-				 -command => \&destroy_tri )->pack(-side => 'left',-expand => 1,-padx=>5);
-$fr4d->Button(-padx=> 20,-text => "Parallelogram",-borderwidth => 1, 
-				 -command => \&destroy_tri )->pack(-side => 'left',-expand => 1,-padx=>5);
+### HOCKEY STICK PATTERN
+my $input_hoc;
+my $color_hoc = 'red';
+my $title_hoc = "Hockey stick pattern";
+my $label_hoc = "Shows that the number at column n in the triangle can be obtained as the summation\n".
+				"of all the numbers in the diagonal from row - 1 column n until the 1 at the border.\n";
+my $hint_hoc = "row column";
+# create_experiment (\$input_hoc, \$color_hoc, $title_hoc, \&help_hockey, \sub {&hockeystick($input_hoc, $color_hoc)});
+$fr4d->Button(-padx=> 20,-text => $title_hoc,-borderwidth => 1, 
+				 -command  => \sub{
+									show_experiment (
+										\$input_hoc,
+										\$color_hoc,
+										$title_hoc,
+										$label_hoc,
+										\&help_hockey, 
+										$hint_hoc,
+										sub { $input_hoc=~s/^\s+//g;
+                                            hockeystick($input_hoc, $color_hoc);											   
+										}
+									);				 
+								}	
+				)->pack(-side => 'left',-expand => 1,-padx=>5);
+				
+### PARALLELOGRAM PATTERN
+my $input_par;
+my $color_par = 'red';
+my $title_par = "Parallelogram pattern";
+my $label_par = "Thi pattern shows that a number in the triangle can be calculated summing up\n".
+				"all numbers in the parallelogram starting from the top edge and ending two\n".
+				"rows above the desired one and finally adding 1 to the summation.\n";
+my $hint_par = "row column";
+# create_experiment (\$input_par, \$color_par, $title_par, \&help_para, \sub {&parallelogram($input_par, $color_par)});
+$fr4d->Button(-padx=> 20,-text => $title_par,-borderwidth => 1, 
+				 -command  => \sub{
+									show_experiment (
+										\$input_par,
+										\$color_par,
+										$title_par,
+										$label_par,
+										\&help_para, 
+										$hint_par,
+										sub { $input_par=~s/^\s+//g;
+												parallelogram($input_par, $color_par);											   
+										}
+									);				 
+								}	
+				)->pack(-side => 'left',-expand => 1,-padx=>5);
+
+### SUM OF SQUARES
+my $input_ssq;
+my $color_ssq = 'red';
+my $title_ssq = "Sum of squares in the row";
+my $label_ssq = "The summation of all term square in the row n is equal\n".
+				"to the central tile of row n * 2\n";
+my $hint_ssq = "row";
+# create_experiment (\$input_ssq, \$color_ssq, $title_ssq, \&help_squa, \sub {&sum_squares($input_ssq, $color_ssq)});
 $fr4d->Button(-padx=> 20,-text => "Sum of squares",-borderwidth => 1, 
-				 -command => \&destroy_tri )->pack(-side => 'left',-expand => 1,-padx=>5);
-$fr4d->Button(-padx=> 20,-text => "Paths to a tile",-borderwidth => 1, 
-				 -command => \&destroy_tri )->pack(-side => 'left',-expand => 1,-padx=>5);
+				 -command  => \sub{
+									show_experiment (
+										\$input_ssq,
+										\$color_ssq,
+										$title_ssq,
+										$label_ssq,
+										\&help_squa, 
+										$hint_par,
+										sub { $input_ssq=~s/^\s+//g;
+												sum_squares($input_ssq, $color_ssq);											   
+										}
+									);				 
+								}	
+				)->pack(-side => 'left',-expand => 1,-padx=>5);
+				
+#### PATHS
+my $input_path;
+my $color_path = 'red';
+my $title_path = "Paths to a tile";
+my $label_path = "The value in a tile corresponds to the number of distinct path (with no\n".
+				"lateral nor backward moves) from the top edge to the tile itself.\n";
+my $hint_path = "row column";
+# create_experiment (\$input_goal, \$color_goal, $title_goal,\&help_paths, \sub {&distinct_paths($input_goal, $color_goal)});
+$fr4d->Button(-padx=> 20,-text => $title_path, -borderwidth => 1, 
+				 -command  => \sub{
+									show_experiment (
+										\$input_path,
+										\$color_path,
+										$title_path,
+										$label_path,
+										\&help_paths, 
+										$hint_path,
+										sub { $input_path=~s/^\s+//g;
+												distinct_paths($input_path, $color_path);											   
+										}
+									);				 
+								}	
+				)->pack(-side => 'left',-expand => 1,-padx=>5);
+				
 
-
+# yet another frame
 my $fr4e = $fr4->Frame()->pack(-expand=>1,-fill=>'x',-side=>'top',-pady=>5);
-$fr4e->Button(-padx=> 20,-text => "Points in a circle",-borderwidth => 1, 
-				 -command => sub{
-				 #### POINTS IN A CIRCLE
-				my $input_points;
-				my $color_points = 'red';
-				my $title_points = "Points in a cirlce    row";
-				show_experiment (\$input_points, \$color_points, $title_points,\&help_points, \sub {&points_in_a_circle($input_points, $color_points)});
 
-				 
-				 }
-				 
-				 
-				 )->pack(-side => 'left',-expand => 1,-padx=>5);
-				 
+#### POINTS IN A CIRCLE
+my $input_points;
+my $color_points = 'red';
+my $title_points = "Points in a cirlce";
+my $label_points = "This experiment open a new window with a cirlce where n points are drawn.\n".
+					"In the corrispective triangle row all numbers, except the first 1, are\n".
+					"numbers of line segments, triangles, quadrilaterals.. with all vertexes on the circle.\n";
+my $hint_points = "points";
+# create_experiment (\$input_points, \$color_points, $title_points,\&help_points, \sub {&points_in_a_circle($input_points, $color_points)});
+
+$fr4e->Button(-padx=> 20,-text => "Points in a circle",-borderwidth => 1, 
+				 -command  => \sub{
+									show_experiment (
+										\$input_points,
+										\$color_points,
+										$title_points,
+										$label_points,
+										\&help_points, 
+										$hint_points,
+										sub { $input_points=~s/^\s+//g;
+												points_in_a_circle($input_points, $color_points);											   
+										}
+									);				 
+								}	
+				)->pack(-side => 'left',-expand => 1,-padx=>5);
 
 									
 $a_row->invoke;				 
@@ -764,7 +898,7 @@ sub combination{
     given_coord ($col3, "0-$row_num $col");
     given_coord ($col4, ($row + $col - 1)." $col");
     given_coord ($color, "$row $col");
-    tar_print "There are ",${[tartaglia_row($row)]}[$col]," ($color tile position $row - $col) different combinations (when the order does not matter) of $col items in group of $row.\n";
+    tar_print "There are ",${[tartaglia_row($row)]}[$col]," ($color tile position $row - $col) different combinations (when the order does not matter) of $col items in a group of $row.\n";
     tar_print "There are ",${[tartaglia_row($row + $col - 1)]}[$col],( $col > 1 ? " ($col4 tile)" : '')." different combinations with repetitions of $col items in group of $row.\n\n";
 }
 ################################################################################
@@ -1063,7 +1197,7 @@ sub create_experiment{
 sub fat_dot {
   # canvas reference and center of the new fat dot
   my ($canv,$x,$y) = @_;
-  # offset to create the quadrilater in which the circle will be draw
+  # offset to create the quadrilateral in which the circle will be draw
   my $offset = 4;
   # canvas and top left and bottom right coords of the 
   # rectangle where the cirlce will be draw
@@ -1337,14 +1471,14 @@ sub help_points{
 
 USAGE: pass the number of a row
 
-Given a row n, placing n points into a cirlce and joining them with line segments the corrispective numbers in the nth row of the triangle (apart from the first 1s) are the number of points, line segments, triangles, quadrilateres, pentagones.. with all vertex relying in the circumference.
+Given a row n, placing n points into a cirlce and joining them with line segments the corrispective numbers in the nth row of the triangle (apart from the first 1s) are the number of points, line segments, triangles, quadrilaterals, pentagones.. with all vertex relying in the circumference.
 
 In other words, given a circle draw points on it from 1 to any number you want and draw all the possible lines between them: you'll see line segments, or if you put 3 or more point, some polygons. The number of each type of geometrical shape are binomial coefficients as shown by the Tartaglia triangle.
-Id est: skipping the first diagonal (all 1s),if  the second one (counting numbers) holds how many points you drawn on a circle then others numbers in the row are how many line segments, trinagles, quadrilaters, pentagons, hexagons, heptagons ... are possible with all vertices on the circle.
+Id est: skipping the first diagonal (all 1s),if  the second one (counting numbers) holds how many points you drawn on a circle then others numbers in the row are how many line segments, trinagles, quadrilaterals, pentagons, hexagons, heptagons ... are possible with all vertices on the circle.
 
 
   points        line
-in a circle   segments    triangles   quadrilaters    pentagons   hexagons
+in a circle   segments    triangles   quadrilaterals    pentagons   hexagons
 
     1            -            -            -               -          -
     2            1            -            -               -          -
@@ -1383,7 +1517,7 @@ sub help_eval  {
 
 USAGE: enter valid Perl code. ** USE WITH CARE **
 
-This experiment is dedicated mostly to Perl writer that can evaluate some code against any number in the triangle. While traversing the triangle numbers '$_' will be the current number.
+This experiment is dedicated mostly to Perl writer that can evaluate some code against any number in the triangle. While traversing the triangle '$_' will be the current number.
 
   $_ == 13
 
@@ -1400,6 +1534,17 @@ will show numbers divisible by 7, reveiling some Sierpinski pattern too.
   $_ > 0
 
 can change the background color of the Tartaglia triangle.
+
+This experiment permits you to load additionl modules: use it with a big care!
+In two steps (to have as mall entry) you can load a module and use it's functions:
+
+	use if $_==2, 'Math::Prime::Util::GMP' => qw/sigma/;  
+
+and then using the sigma function to show the distribution of abundant numbers, evaluating:
+
+	sigma($_)>2*$_
+	
+Notice that if $_==2 it's true for just one tile in the triangle.
 
 EOH
 }
@@ -1522,6 +1667,11 @@ sub help_hockey  {
 
 USAGE: give the coordinates of tile and will be demondstrated that this number is equal to the summation of all numbers in the prior diagonal up to the same position of the given number.
 
+If you look at the serie of natural numbers in the triangle, it's easy to evince that each one is the result of the summation of all 1s from the top one to the one lying one row before the considered natural number.
+
+Given the Hockeystick pattern and using natural numbers you obtain triangulars ones (see the specific experiemnt).
+
+Using triangulars numbers you can calculate tetrahedral numbers, and so on.
 
 EOH
 }
