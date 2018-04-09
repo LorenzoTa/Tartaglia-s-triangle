@@ -7,11 +7,6 @@ use POSIX;
 use Tk;
 use Tk::Pane;
 use Tk::LabFrame;
-
-use Tk::WidgetDump;
-use Tk::ObjScanner;
-
-
 ################################################################################
 #   SOME GLOBAL DECLARATION
 ################################################################################
@@ -116,7 +111,7 @@ my $fr4 = $scrolled_top->LabFrame(
 										-padx=>10);
 #$fr4->Label(-justify=>'left',-text => "Click an experiment button to open it" )->pack(-expand=>1,-fill=>'x');
 
-my $fr4a = $fr4->Frame()->pack(-side=>'top',-pady=>5);
+my $fr4a = $fr4->Frame()->pack(-side=>'top',-pady=>5,-expand=>1,-fill=>'x');
 
 my $fr5_exp;
 
@@ -144,7 +139,7 @@ my $a_row = $fr4a->Button(	-padx=> 20,-text => "Value of a row",-borderwidth => 
                                                show_a_row($color_a_row,$input_a_row);
                                         }
 									);				 
-							 }	)->pack(-side => 'left',-expand => 1,-padx=>5);	
+							 }	)->pack(-side => 'left',-expand => 1,-fill=>'x',-padx=>5);	
 							 
 ##### BINOMIAL EXPANSION
 my $input_bin;
@@ -168,7 +163,7 @@ $fr4a->Button(-padx=> 20,-text => "Binomial Expansion",-borderwidth => 1,
                                                &given_coord($color_bin,$input_bin." 0-$input_bin");
                                                &bin_exp($input_bin)}
 									);				 
-							 }	)->pack(-side => 'left',-expand => 1,-padx=>5);	
+							 }	)->pack(-side => 'left',-expand => 1,-fill=>'x',-padx=>5);	
 ##### POWERS OF 2
 my $input_p2;
 my $color_p2 = 'red';
@@ -189,7 +184,7 @@ $fr4a->Button(-padx=> 20,-text => $title_p2,-borderwidth => 1,
 											   
 											   }
 									);				 
-							 }	)->pack(-side => 'left',-expand => 1,-padx=>5);
+							 }	)->pack(-side => 'left',-expand => 1,-fill=>'x',-padx=>5);	
 # POWERS OF 11				
 my $input_p11;
 my $color_p11 = 'red';
@@ -210,7 +205,7 @@ $fr4a->Button(	-padx=> 20,-text => "Powers of 11",-borderwidth => 1,
 										}
 									);				 
 								}	
-				)->pack(-side => 'left',-expand => 1,-padx=>5);	
+				)->pack(-side => 'left',-expand => 1,-fill=>'x',-padx=>5);	
 ##### FIBONACCI
 my $input_fib;
 my $color_fib = 'red';
@@ -234,7 +229,7 @@ $fr4a->Button(-padx=> 20,-text => "Fibonacci",-borderwidth => 1,
 								}	
 				)->pack(-side => 'left',-expand => 1,-padx=>5);
 # another row of buttons
-my $fr4b = $fr4->Frame()->pack(-expand=>1,-fill=>'x',-side=>'top',-pady=>5);
+my $fr4b = $fr4->Frame()->pack(-side=>'top',-pady=>5,-expand=>1,-fill=>'x');
 ##### PRIME NUMBERS
 my $input_pri;
 my $color_pri = 'red';
@@ -255,7 +250,7 @@ $fr4b->Button(-padx=> 20,-text => "Prime numbers",-borderwidth => 1,
 										}
 									);				 
 								}	
-				)->pack(-side => 'left',-expand => 1,-padx=>5);
+				)->pack(-side => 'left',-expand => 1,-fill=>'x',-padx=>5);	
 ### POLYGONAL NUMBERS
 my $input_tri;
 my $color_tri = 'red';
@@ -278,7 +273,7 @@ $fr4b->Button(-padx=> 20,-text => "Triangular numbers",-borderwidth => 1,
 										}
 									);				 
 								}	
-				)->pack(-side => 'left',-expand => 1,-padx=>5);
+				)->pack(-side => 'left',-expand => 1,-fill=>'x',-padx=>5);	
 #### COORDINATES
 my $input_coord;
 my $color_coord = 'red';
@@ -303,7 +298,7 @@ $fr4b->Button(-padx=> 20,-text => "Colorize by coordinates",-borderwidth => 1,
 										}
 									);				 
 								}	
-				)->pack(-side => 'left',-expand => 1,-padx=>5);
+				)->pack(-side => 'left',-expand => 1,-fill=>'x',-padx=>5);	
 ### DAVID STAR
 my $input_star;
 my $color_star = 'red';
@@ -324,9 +319,9 @@ $fr4b->Button(-padx=> 20,-text => $title_star ,-borderwidth => 1,
 										}
 									);				 
 								}	
-				)->pack(-side => 'left',-expand => 1,-padx=>5);
+				)->pack(-side => 'left',-expand => 1,-fill=>'x',-padx=>5);	
 # another row of buttons
-my $fr4c = $fr4->Frame()->pack(-expand=>1,-fill=>'x',-side=>'top',-pady=>5);
+my $fr4c = $fr4->Frame()->pack(-side=>'top',-pady=>5,-expand=>1,-fill=>'x');
 ### CATALAN
 my $input_cat;
 my $color_cat = 'red';
@@ -347,7 +342,7 @@ $fr4c->Button(-padx=> 20,-text => "Catalan numbers",-borderwidth => 1,
 										}
 									);				 
 								}	
-				)->pack(-side => 'left',-expand => 1,-padx=>5);
+				)->pack(-side => 'left',-expand => 1,-fill=>'x',-padx=>5);	
 ### MERSENNE AND M PRIMES
 my $input_mer;
 my $color_mer = 'red';
@@ -370,7 +365,7 @@ $fr4c->Button(-padx=> 20,-text => "Mersenne numbers",-borderwidth => 1,
 										}
 									);				 
 								}	
-				)->pack(-side => 'left',-expand => 1,-padx=>5);			
+				)->pack(-side => 'left',-expand => 1,-fill=>'x',-padx=>5);		
 ### SIERPINSKI
 my $input_sie;
 my $color_sie = 'red';
@@ -391,7 +386,7 @@ $fr4c->Button(-padx=> 20,-text => "Sierpinski fractals",-borderwidth => 1,
 										}
 									);				 
 								}	
-				)->pack(-side => 'left',-expand => 1,-padx=>5);
+				)->pack(-side => 'left',-expand => 1,-fill=>'x',-padx=>5);	
 ### COMBINATIONS
 my $input_com;
 my $color_com = 'red';
@@ -413,9 +408,9 @@ $fr4c->Button(-padx=> 20,-text => "Combinations",-borderwidth => 1,
 										}
 									);				 
 								}	
-				)->pack(-side => 'left',-expand => 1,-padx=>5);
+				)->pack(-side => 'left',-expand => 1,-fill=>'x',-padx=>5);	
 # another frame of buttons				
-my $fr4d = $fr4->Frame()->pack(-expand=>1,-fill=>'x',-side=>'top',-pady=>5);
+my $fr4d = $fr4->Frame()->pack(-side=>'top',-pady=>5,-expand=>1,-fill=>'x');
 ### EVALUATION
 my $input_eval;
 my $color_eval = 'red';
@@ -438,7 +433,7 @@ $fr4d->Button(-padx=> 20,-text => "Colorize by evaluatation",-borderwidth => 1,
 										}
 									);				 
 								}	
-				)->pack(-side => 'left',-expand => 1,-padx=>5);
+				)->pack(-side => 'left',-expand => 1,-fill=>'x',-padx=>5);	
 ### HOCKEY STICK PATTERN
 my $input_hoc;
 my $color_hoc = 'red';
@@ -460,7 +455,7 @@ $fr4d->Button(-padx=> 20,-text => $title_hoc,-borderwidth => 1,
 										}
 									);				 
 								}	
-				)->pack(-side => 'left',-expand => 1,-padx=>5);				
+				)->pack(-side => 'left',-expand => 1,-fill=>'x',-padx=>5);	
 ### PARALLELOGRAM PATTERN
 my $input_par;
 my $color_par = 'red';
@@ -483,7 +478,7 @@ $fr4d->Button(-padx=> 20,-text => $title_par,-borderwidth => 1,
 										}
 									);				 
 								}	
-				)->pack(-side => 'left',-expand => 1,-padx=>5);
+				)->pack(-side => 'left',-expand => 1,-fill=>'x',-padx=>5);	
 ### SUM OF SQUARES
 my $input_ssq;
 my $color_ssq = 'red';
@@ -505,7 +500,7 @@ $fr4d->Button(-padx=> 20,-text => "Sum of squares",-borderwidth => 1,
 										}
 									);				 
 								}	
-				)->pack(-side => 'left',-expand => 1,-padx=>5);				
+				)->pack(-side => 'left',-expand => 1,-fill=>'x',-padx=>5);		
 #### PATHS
 my $input_path;
 my $color_path = 'red';
@@ -527,9 +522,9 @@ $fr4d->Button(-padx=> 20,-text => $title_path, -borderwidth => 1,
 										}
 									);				 
 								}	
-				)->pack(-side => 'left',-expand => 1,-padx=>5);
+				)->pack(-side => 'left',-expand => 1,-fill=>'x',-padx=>5);	
 # yet another frame
-my $fr4e = $fr4->Frame()->pack(-expand=>1,-fill=>'x',-side=>'top',-pady=>5);
+my $fr4e = $fr4->Frame()->pack(-side=>'top',-pady=>5,-expand=>1,-fill=>'x');
 #### POINTS IN A CIRCLE
 my $input_points;
 my $color_points = 'red';
@@ -553,6 +548,7 @@ $fr4e->Button(-padx=> 20,-text => "Points in a circle",-borderwidth => 1,
 									);				 
 								}	
 				)->pack(-side => 'left',-expand => 1,-padx=>5);
+				# others have ->pack(-side => 'left',-expand => 1,-fill=>'x',-padx=>5);	
 
 # invoke the first experiment									
 $a_row->invoke;				 
@@ -560,10 +556,6 @@ $a_row->invoke;
 tar_print "Welcome to Tartaglia triangle fun offered by Discipulus as found at www.perlmonks.org";
 &draw_triangle;
 
-#tar_print "MainWindow geometry: ",$mw->geometry(),"\n";
-#    tar_print "Triangle geometry: ",$tart_win->geometry(),"\n";
-#    tar_print "output geometry: ",$ow->geometry(),"\n";
-$mw->WidgetDump;
 MainLoop;
 
 sub show_experiment{
