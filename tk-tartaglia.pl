@@ -989,7 +989,7 @@ The nth s-ogonal number P(s,n) is related to the Triangular number T:
 
 P(s,n)  = (s-2) T(n-1) + n  = (s - 3) T(n-1) + T(n)
 
-For example the 4th exagonal number is:
+For example the 4th hexagonal number is:
 
 P(6,4) =  (6 - 2) T(4-1) + 4  =  4 T(3) + 4  =  4 * 6 + 4 =  28
 
