@@ -27,7 +27,7 @@ where n is the row and k is the position, both counting from 0.
 
 Experiments Panel 
 
-At the top you have the Properties Configuration: This allows the user to determine and/or display:
+At the top you have the Properties Configuration: this allows the user to determine and/or display:
  * How many rows to draw
  * A button to display this introduction
  * At what point large numbers should be subtituted with dots (to build the shape of the triangle acceptable)
@@ -37,7 +37,7 @@ At the top you have the Properties Configuration: This allows the user to determ
  * The main creation or distruction control
 
 Consider that building a bigger triangle requires bigger calculations: You can draw a 127 (or more) row triangle in few seconds on a modern calculator if you want.
-If this is the case consider that the values of any element in rows are cached by the main Perl program, so that following calculation will use cached values with no speed penalty.
+If this is the case consider that the values of any element in rows are cached by the main Perl program, so that following calculations will use cached values with no speed penalty. Obviously more memory is needed.
 
 The next part is a number of experiments you can do with the aritmetic triangle.
 The experiments looks very similar:
