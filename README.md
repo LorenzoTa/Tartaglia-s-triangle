@@ -17,9 +17,8 @@ When you click a tale of the triangle it's coordinates and it's numerical value 
 
 Remember that the first row is 0 and the first column is also 0. The triangle is constructed by summing the values of two adiacent position in row and putting the result, below them, in the middle. The general formula to calculate any given number in the triangle given the coordinate is also known as "n choose k"
 
-               n!
- C(n,k) =    ______
-            k!(n-k)!
+              
+ C(n,k) =   n! / k!(n-k)!
 
 
 where n is the row and k is the position, both counting from 0.
