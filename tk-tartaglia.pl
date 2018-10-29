@@ -118,7 +118,7 @@ my $fr5_exp;
 ##### VALUES IN A ROW
 my $input_a_row; 
 my $color_a_row='red';
-my $title_row = "Value of a row";
+my $title_row = "Values in a row";
 my $label_row = "This experiment simply shows values in a given row.\n".
 	"Please note that in the triangle first row is 0, as the first column, so\n".
 	"the tile at the edge has coordinates 0-0\n".
@@ -126,14 +126,14 @@ my $label_row = "This experiment simply shows values in a given row.\n".
 	"the tiles in the row colorized and some output in it's own window.\n";
 my $hint_a_row = "row number";									
 # $a_row is named beacause later ->invoke
-my $a_row = $fr4a->Button(	-padx=> 20,-text => "Value of a row",-borderwidth => 1, 
+my $a_row = $fr4a->Button(	-padx=> 20,-text => "Values in a row",-borderwidth => 1, 
 							-command => \sub{
 									show_experiment (
 										\$input_a_row,
 										\$color_a_row,
 										$title_row,
 										$label_row,
-										\&help_points, 
+										\&help_values, 
 										$hint_a_row,
 										sub { $input_a_row=~s/\s+//g;
                                                show_a_row($color_a_row,$input_a_row);
@@ -1253,6 +1253,18 @@ sub help {
 ################################################################################
 #     HELP TEXTS SUBROUTINES
 ################################################################################
+sub help_values{
+    return <<EOH
+* Values in a row  *
+
+USAGE: pass the number of a row
+
+Simply shows values contained in a given row.
+
+
+EOH
+}
+################################################################################
 sub help_points{
     return <<EOH
 * Points in a circle  *
@@ -1700,7 +1712,7 @@ where n is the row and k is the position, both counting from 0.
 
 * Experiments Panel *
 
-At the top you have the Properties Configuration: This allows the user to determine and/or display:
+At the top you have the Properties Configuration: this allows the user to determine and/or display:
  * How many rows to draw
  * A button to display this introduction
  * At what point large numbers should be subtituted with dots (to build the shape of the triangle acceptable)
@@ -1710,7 +1722,8 @@ At the top you have the Properties Configuration: This allows the user to determ
  * The main creation or distruction control
 
 Consider that building a bigger triangle requires bigger calculations: You can draw a 127 (or more) row triangle in few seconds on a modern calculator if you want.
-If this is the case consider that the values of any element in rows are cached by the main Perl program, so that following calculation will use cached values with no speed penalty.
+If this is the case consider that the values of any element in rows are cached by the main Perl program, so that following calculations will use cached values with no speed penalty.
+Obviously more memory is needed.
 
 The next part is a number of experiments you can do with the aritmetic triangle.
 The experiments looks very similar:
